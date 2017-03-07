@@ -149,7 +149,7 @@ public:
             _pop.swap(Q);
             apply<EOT > (eval, _pop); //Assess Fitness
 
-            if (prevBest == best.fitness())
+            if ((best.fitness() - prevBest) / prevBest < this->minFitnessRatio)
             {
                 stableCounter++;
                 if (stableCounter == this->stableCount)
@@ -160,8 +160,10 @@ public:
                     {
                         _pop[i] = this->initial;
                     }
+                    printf("Hello\n");
                     break;
                 }
+                prevBest = best.fitness();
                 
             }
             else
@@ -194,7 +196,7 @@ public:
     int genCount;
     int stableCount;
     double prevBest;
-
+    double minFitnessRatio;
 };
 
 #endif

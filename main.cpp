@@ -5,6 +5,7 @@
 // the general include for eo
 #include <eo>
 #include "eoGAWE.h"
+#include "eoFitnessImprovementRatioContinue.h"
 
 using namespace std;
 
@@ -145,7 +146,8 @@ void main_function(int argc, char **argv)
     mutation.add(bM, 1 - parameters["pSm"]);
 
     //stop after maxGen generations
-    eoGenContinue<Indi> continuator(parameters["maxGen"]);
+    //eoGenContinue<Indi> continuator(parameters["minGen"], parameters[]);
+    eoFitnessImprovementRatioContinue<Indi> continuator(10, 50, 100, 0.000);
     //CHECKPOINT
     eoCheckPoint<Indi> checkpoint(continuator);
     // Create a counter parameter
@@ -174,6 +176,7 @@ void main_function(int argc, char **argv)
     gga.actualBest = pop[0];
     gga.initial = pop[0];
     gga.stableCount = parameters["stableCount"];
+    gga.minFitnessRatio = parameters["minFitnessRatio"];
     cout << "Initial : " << gga.best.fitness() << endl << gga.best.D[0] << endl << gga.best.D[1] << endl << gga.best.D[2] << endl << gga.best.Dun << endl << gga.best.ATT << endl;
     for (int i = 0; i < parameters["maxIter"]; i++)
     {

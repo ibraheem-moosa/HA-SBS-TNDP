@@ -6,9 +6,11 @@ eilte 2
 pSm 0.7
 pDelete 0.4
 tFit 10
-maxGen 20
+maxGen 200
 maxIter 20
 beta 0.8
 run 20
-stableCount 15
+stableCount 50
 e 0.7
+minGen 10
+minFitnessRatio 0.005
