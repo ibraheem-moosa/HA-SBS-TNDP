@@ -45,7 +45,7 @@ public:
                 {
                     int i = *it;
                     int j = *next;
-                    pSum = pSum + p[i][j];
+                    pSum = pSum + p[r][i][j];
                 }
             }
 

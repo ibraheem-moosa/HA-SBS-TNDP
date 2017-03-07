@@ -3,7 +3,7 @@ pSwap 0.25
 popSize 18
 elite 2
 eilte 2
-pSm 0.7
+pSm 0.2
 pDelete 0.4
 tFit 10
 maxGen 200

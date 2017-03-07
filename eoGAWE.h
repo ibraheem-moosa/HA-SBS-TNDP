@@ -144,7 +144,7 @@ public:
             {
                 actualBest = competitor;
             }
-            std::cout << actualBest.D[0] << ',' << actualBest.D[1] << ',' << actualBest.D[2] << ',' << actualBest.Dun << ',' << actualBest.ATT << std::endl;
+            std::cout << actualBest.D[0] << ',' << actualBest.D[1] << ',' << actualBest.D[2] << ',' << actualBest.Dun << ',' << actualBest.ATT  << ',' << actualBest.fitness()<< std::endl;
 
             _pop.swap(Q);
             apply<EOT > (eval, _pop); //Assess Fitness
@@ -160,7 +160,7 @@ public:
                     {
                         _pop[i] = this->initial;
                     }
-                    printf("Hello\n");
+                    //printf("Hello\n");
                     break;
                 }
                 prevBest = best.fitness();

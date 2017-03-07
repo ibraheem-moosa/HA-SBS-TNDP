@@ -20,6 +20,7 @@
 #undef INFINITY
 #define INFINITY INT_MAX
 #define TRANSFER_PENALTY 5
+#define ROUTESETSIZE 4
 
 using namespace std;
 
@@ -27,7 +28,7 @@ int d[VERTICES_NO][VERTICES_NO];
 int tr[VERTICES_NO][VERTICES_NO];
 int sDist[VERTICES_NO][VERTICES_NO];
 int DS[VERTICES_NO][VERTICES_NO];
-double p[VERTICES_NO][VERTICES_NO]; //phoremon
+double p[ROUTESETSIZE][VERTICES_NO][VERTICES_NO]; //phoremon
 list <int> sPath[VERTICES_NO][VERTICES_NO];
 vector <int> AdjList[VERTICES_NO];
 map<string, float> parameters;

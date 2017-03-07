@@ -48,7 +48,7 @@ int rouletteWheelForPath(int startIndex)
     }
     return rng.roulette_wheel(fits, total);
 }
-int  rouletteWheelForNode( int startIndex,std::vector<int> AdjList)
+int  rouletteWheelForNode( int startIndex,std::vector<int> AdjList, int mutIndex)
 {
     if(AdjList.size() == 1)
         return 0;
@@ -57,7 +57,7 @@ int  rouletteWheelForNode( int startIndex,std::vector<int> AdjList)
     double fit;
     for(int i=0;i<AdjList.size();i++)
     {
-            fit = 1/( 1+p[startIndex][AdjList[i]] );    
+            fit = 1/( 1+p[mutIndex][startIndex][AdjList[i]] );    
             fits.push_back(fit);
             total += fit;
     }
@@ -141,7 +141,7 @@ public:
             int toAddIndex;
            
            // toAddIndex = rng.random(AdjListForSelected.size());
-            toAddIndex = rouletteWheelForNode(selectedNode,AdjListForSelected);
+            toAddIndex = rouletteWheelForNode(selectedNode,AdjListForSelected,mutIndex);
            
             mutRoute.insert(it[selectedEnd], AdjListForSelected[toAddIndex]);
             mutRoute.nodeList[AdjListForSelected[toAddIndex]] = 1;

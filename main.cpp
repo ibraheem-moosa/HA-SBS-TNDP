@@ -20,7 +20,7 @@ using namespace std;
 
 typedef eoMinimizingFitness MyFitT;
 typedef RouteSet<double> Indi;
-double penalizability(int a, int b);
+double penalizability(int a, int b, int c);
 
 
 ofstream fout("best.txt");
@@ -170,7 +170,7 @@ void main_function(int argc, char **argv)
     monitor.add(generationCounter);
     //THE ALGORITHM
     eoGAWE<Indi> gga(select, xover, mutation,
-                     adjustedEval, checkpoint, parameters["elite"]); //changed
+            adjustedEval, checkpoint, parameters["elite"]); //changed
     // cout << pop[0];
     gga.best = pop[0];
     gga.actualBest = pop[0];
@@ -186,64 +186,56 @@ void main_function(int argc, char **argv)
         gga(pop);
 
         vector< Route<double> > & routeSet = gga.best.mutableRs();
-        double maxPenalizibility = -1;
-        double minPenalizibility = INFINITY;
-        bool visitedEdge[VERTICES_NO][VERTICES_NO];
-        memset(visitedEdge, 0, VERTICES_NO * VERTICES_NO * sizeof (bool));
-        vector<edge> edgeList;
         for (int r = 0; r < routeSet.size(); r++)
         {
+            double maxPenalizibility = -1;
+            double minPenalizibility = INFINITY;
+            vector<edge> edgeList;
+
             list<int>::const_iterator next = routeSet[r].R().begin();
             list<int>::const_iterator it = next++;
             for (; next != routeSet[r].R().end(); it++, next++)
             {
                 int i = *it;
                 int j = *next;
-                if (visitedEdge[i][j] || visitedEdge[j][i])
-                {
-                    continue;
-                }
-                //else
-                visitedEdge[i][j] = visitedEdge[j][i] = 1;
-                double penalty = penalizability(i, j);
-                if (penalty > maxPenalizibility)
-                {
-                    maxPenalizibility = penalty;
-                }
-                if (penalty < minPenalizibility)
-                {
-                    minPenalizibility = penalty;
-                }
+
+                double penalty = penalizability(i, j, r);
+                if (penalty > maxPenalizibility) maxPenalizibility = penalty;
+                if (penalty < minPenalizibility) minPenalizibility = penalty;
+
                 edgeList.push_back(edge(i, j, penalty));
             }
-        }
-        //double randomPenalty = rng.uniform(minPenalizibility,maxPenalizibility);
-        for (int i = 0; i < edgeList.size(); i++)
-        {
-            if ( (edgeList[i].penalizibility-minPenalizibility)/(maxPenalizibility-minPenalizibility) > 0.8)
+
+            //double randomPenalty = rng.uniform(minPenalizibility,maxPenalizibility);
+            for (int i = 0; i < edgeList.size(); i++)
             {
-                int a = edgeList[i].a, b = edgeList[i].b;
-                p[a][b]++;
-                p[b][a]++;
+                if ( (edgeList[i].penalizibility-minPenalizibility)/(maxPenalizibility-minPenalizibility) > 0.8)
+                {
+                    int a = edgeList[i].a, b = edgeList[i].b;
+                    p[r][a][b]++;
+                    p[r][b][a]++;
+                }
             }
-        }
-        for (int i = 0; i < pop.size(); i++)
-        {
-            pop[i].invalidate();
-            adjustedEval(pop[i]);
-        }
-        for (int i = 0; i < VERTICES_NO; i++)
-        {
-            for (int j = i + 1; j < VERTICES_NO; j++)
+
+            for (int i = 0; i < pop.size(); i++)
             {
-                p[j][i] = p[i][j] = (1-parameters["e"])*p[i][j];
+                pop[i].invalidate();
+                adjustedEval(pop[i]);
+            }
+
+            for (int i = 0; i < VERTICES_NO; i++)
+            {
+                for (int j = i + 1; j < VERTICES_NO; j++)
+                {
+                    p[r][j][i] = p[r][i][j] = (1-parameters["e"])*p[r][i][j];
+                }
             }
         }
     }
     cout << "FINAL Population size\n" << pop.size() << endl;
-    cout << "Best : " << gga.actualBest << endl << gga.actualBest.D[0] << endl << gga.actualBest.D[1] << endl << gga.actualBest.D[2] << endl << gga.actualBest.Dun << endl << gga.actualBest.ATT << endl;
+    cout << "Best : " << gga.actualBest << endl << gga.actualBest.D[0] << endl << gga.actualBest.D[1] << endl << gga.actualBest.D[2] << endl << gga.actualBest.Dun << endl << gga.actualBest.ATT << endl << gga.actualBest.fitness() << endl;
 
-    fout << "Best : " << gga.actualBest << endl << gga.actualBest.D[0] << endl << gga.actualBest.D[1] << endl << gga.actualBest.D[2] << endl << gga.actualBest.Dun << endl << gga.actualBest.ATT << endl;
+    fout << "Best : " << gga.actualBest << endl << gga.actualBest.D[0] << endl << gga.actualBest.D[1] << endl << gga.actualBest.D[2] << endl << gga.actualBest.Dun << endl << gga.actualBest.ATT << endl <<gga.actualBest.fitness()  << endl;
     avg[0] += gga.actualBest.D[0];
     avg[1] += gga.actualBest.D[1];
     avg[2] += gga.actualBest.D[2];
@@ -278,7 +270,7 @@ int main(int argc, char** argv)
     return (EXIT_SUCCESS);
 }
 
-double penalizability(int a, int b)
+double penalizability(int a, int b, int r)
 {
-    return 1.0 * tr[a][b] / ((1 + p[a][b]) * (1 + d[a][b])); //* tr[a][b]
+    return 1.0 * tr[a][b] / ((1 + p[r][a][b]) * (1 + d[a][b])); //* tr[a][b]
 }
