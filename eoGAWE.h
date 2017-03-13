@@ -148,9 +148,11 @@ public:
 
             _pop.swap(Q);
             apply<EOT > (eval, _pop); //Assess Fitness
-
-            if ((best.fitness() - prevBest) / prevBest < this->minFitnessRatio)
+            
+            double fitnessImprovementRatio = (best.fitness() - prevBest) / fabs(prevBest);  
+            if (fitnessImprovementRatio < this->minFitnessRatio)
             {
+                printf("ratio: %lf\n", fitnessImprovementRatio);
                 stableCounter++;
                 if (stableCounter == this->stableCount)
                 {

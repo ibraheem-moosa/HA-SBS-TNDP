@@ -13,14 +13,14 @@
 //#include <cstdlib>
 //#include <list>
 
-#define DEMAND_FILE "MandlOriginDestination.txt"  //change
-#define TRAVEL_TIME_FILE "MandlDistances.txt"     //change
-#define INITIAL_ROUTE_SET "inputPathMandl.txt"    //change
-#define VERTICES_NO 15                            //change
+#define DEMAND_FILE "M1OriginDestination.txt"  //change
+#define TRAVEL_TIME_FILE "M1Distances.txt"     //change
+#define INITIAL_ROUTE_SET "inputPathM1.txt"    //change
+#define VERTICES_NO 70                            //change
 #undef INFINITY
 #define INFINITY INT_MAX
 #define TRANSFER_PENALTY 5
-#define ROUTESETSIZE 4
+#define ROUTESETSIZE 15
 
 using namespace std;
 
