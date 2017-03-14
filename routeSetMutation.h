@@ -48,7 +48,7 @@ int rouletteWheelForPath(int startIndex)
     }
     return rng.roulette_wheel(fits, total);
 }
-int  rouletteWheelForNode( int startIndex,std::vector<int> AdjList, int mutIndex)
+int rouletteWheelForNode( int startIndex,std::vector<int> AdjList, int mutIndex)
 {
     if(AdjList.size() == 1)
         return 0;
@@ -108,14 +108,23 @@ public:
 
         if (pDelete >= rng.uniform()) //delete a terminal
         {
-            if (mutRoute.mutableR().size() < 3) //path is too small, no deletion just return
-                return false;
-            mutRoute.erase(it[selectedEnd]);
+
+            if (mutRoute.mutableR().size() < parameters["minRouteLength"]){ //path is too small, no deletion just return
+                cout << "Going to APPEND\n";
+                goto APPEND; 
+            }
+DELETE:     mutRoute.erase(it[selectedEnd]);
             mutRoute.nodeList[selectedNode] = 0;
         }
         else //append a terminal
         {
-            vector<int> AdjListForSelected = AdjList[selectedNode];
+            
+            if (mutRoute.mutableR().size() > parameters["maxRouteLength"]){ //path is too small, no deletion just return
+                cout << "Going to DELETE\n";
+                goto DELETE;
+            }
+
+APPEND:     vector<int> AdjListForSelected = AdjList[selectedNode];
             for (vector<int>::iterator iit = AdjListForSelected.begin(); iit != AdjListForSelected.end(); iit++)
             {
                 if (mutRoute.nodeList[*iit] == 1)

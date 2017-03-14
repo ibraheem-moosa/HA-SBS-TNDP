@@ -31,11 +31,25 @@ void popInit(eoPop< RouteSet<double> >& _pop, int popSize, int routeSetSize, eoE
             initNodeList[node] = 1;
             fin >> node;
         }
+        
+        if(initL.size() > parameters["maxRouteSize"]){
+            int del = initL.size() - parameters["maxRouteSize"];
+            if(rng.uniform() > 0.5){
+                for(int i=0; i<del; i++) initL.pop_front();
+            }
+            else{
+               int newSize = initL.size() - del;
+               initL.resize(newSize); 
+            }
+        } 
+        
         initR.setR(initL);
         initR.setNodeList(initNodeList);
         initR.fitness(1.0 / DS[initL.front()][initL.back()]); //fitness 1/ds
         initV.push_back(initR);
     }
+
+
     initRs.setRs(initV);
     _eval(initRs);
 

@@ -50,6 +50,8 @@ public:
             }
 
             double adjustedFitness = _eo.actualFitness - parameters["beta"] * pSum;
+
+            //cout << "actual fitness: " <<  _eo.actualFitness << "penalty: " << pSum << "weighted penalty: " << parameters["beta"] * pSum << endl; 
             _eo.fitness(adjustedFitness); //minimize
         }
     }
