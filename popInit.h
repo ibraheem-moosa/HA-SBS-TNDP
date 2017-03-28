@@ -31,11 +31,30 @@ void popInit(eoPop< RouteSet<double> >& _pop, int popSize, int routeSetSize, eoE
             initNodeList[node] = 1;
             fin >> node;
         }
+        
+        //cout << initL.front() << " " << initL.back() << " " << DS[initL.front()][initL.back()] << endl;
+	//cout << initL.size() << endl;
+
+        if(initL.size() > parameters["maxRouteLength"]){
+            int del = initL.size() - parameters["maxRouteLength"];
+            if(rng.uniform() > 0.5){
+                for(int i=0; i<del; i++) initL.pop_front();
+            }
+            else{
+               int newSize = initL.size() - del;
+               initL.resize(newSize); 
+            }
+        } 
+	//cout << initL.size() << endl;
+        
         initR.setR(initL);
         initR.setNodeList(initNodeList);
-        initR.fitness(1.0 / DS[initL.front()][initL.back()]); //fitness 1/ds
+        cout << initL.front() << " " << initL.back() << " " << DS[initL.front()][initL.back()] << endl;
+	initR.fitness(1.0 / DS[initL.front()][initL.back()]); //fitness 1/ds
         initV.push_back(initR);
     }
+
+
     initRs.setRs(initV);
     _eval(initRs);
 
@@ -48,4 +67,5 @@ void popInit(eoPop< RouteSet<double> >& _pop, int popSize, int routeSetSize, eoE
 }
 
 #endif	/* _POPINIT_H */
+
 

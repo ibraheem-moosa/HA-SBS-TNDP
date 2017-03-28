@@ -24,99 +24,7 @@ double penalizability(int a, int b, int c);
 
 
 ofstream fout("best.txt");
-double avg[5];
-
-
-//rng.reseed(time(0));
-
-////fitness evaluators
-//eoEvalFuncPtr< Route<double> > routeEval(routeFitness);
-//RouteSetEvalFunc<Indi> routeSetEval;
-//AdjustedEvalFunc<Indi> adjustedEval(routeSetEval);
-
-////population
-//eoPop<Indi> pop;
-// popInit(pop, parameters["popSize"], parameters["routeSetSize"], routeSetEval);
-
-////selection
-//eoDetTournamentSelect<Indi> selectOne(parameters["tFit"]);
-//double perc = (parameters["popSize"] - parameters["eilte"]) / parameters["popSize"]; //eilte
-//eoSelectPerc<Indi> select(selectOne, perc);
-//
-////crossover
-//RouteSetQuadCrossover<Indi> xover(parameters["pSwap"]);
-//
-////mutations
-//BigMutation<Indi> bM(routeEval);
-//SmallMutation<Indi> sM(parameters["pDelete"], routeEval);
-//eoPropCombinedMonOp<Indi> mutation(sM, parameters["pSm"]);
-//mutation.add(bM, 1 - parameters["pSm"]);
-
-//stop after maxGen generations
-//eoGenContinue<Indi> continuator(parameters["maxGen"]);
-//CHECKPOINT
-//eoCheckPoint<Indi> checkpoint(continuator);
-// Create a counter parameter
-//eoValueParam<unsigned> generationCounter(0, "Generation");
-// Create an incrementor (sub-class of eoUpdater). Note that the
-// parameter's value is passed by reference,
-// so every time the incrementer is updated (every generation),
-// the data in generationCounter will change.
-//eoIncrementor<unsigned> increment(generationCounter.value());
-// Add it to the checkpoint,
-// so the counter is updated (here, incremented) every generation
-//checkpoint.add(increment);
-
-// now some statistics on the population:
-// Best fitness in population
-// eoBestFitnessStat<Indi> bestStat;
-// Second moment stats: average and stdev
-// eoSecondMomentStats<Indi> SecondStat;
-
-// Add them to the checkpoint to get them called at the appropriate time
-// checkpoint.add(bestStat);
-// checkpoint.add(SecondStat);
-
-//// The Stdout monitor will print parameters to the screen ...
-//eoStdoutMonitor monitor(false);
-
-// when called by the checkpoint (i.e. at every generation)
-// checkpoint.add(monitor);
-
-// the monitor will output a series of parameters: add them
-//monitor.add(generationCounter);
-//monitor.add(bestStat);
-//monitor.add(SecondStat);
-
-// A file monitor: will print parameters to ... a File, yes, you got it!
-//eoFileMonitor fileMonitor("stats.txt", " ");
-
-// the checkpoint mechanism can handle multiple monitors
-// checkpoint.add(fileMonitor);
-
-// the fileMonitor can monitor parameters, too, but you must tell it!
-// fileMonitor.add(generationCounter);
-//  fileMonitor.add(bestStat);
-//  fileMonitor.add(SecondStat);
-
-////THE ALGORITHM
-//eoGAWE<Indi> gga(select, xover, mutation,
-//                 adjustedEval, checkpoint, parameters["elite"]);
-
-//    gga.best = pop[0];
-//    gga.actualBest = pop[0]; 
-//    cout << "Initial : " << gga.best.fitness() << endl << gga.best.D[0] << endl << gga.best.D[1] << endl << gga.best.D[2] << endl << gga.best.Dun << endl << gga.best.ATT<<endl;
-// Apply algo to pop - that's it!
-//gga(pop);
-
-//output
-//cout << "FINAL Population size\n" << pop.size() << endl;
-//cout << "Best : " << gga.best << endl << gga.best.D[0] << endl << gga.best.D[1] << endl << gga.best.D[2] << endl << gga.best.Dun << endl << gga.best.ATT;
-//
-//fout << "Best : " << gga.best << endl << gga.best.D[0] << endl << gga.best.D[1] << endl << gga.best.D[2] << endl << gga.best.Dun << endl << gga.best.ATT << endl;
-//avg += gga.best.D[0];
-
-//  pop.sort();
+double avg[5], bestFitnessMetrics[5], allRunBestFitness;
 
 void main_function(int argc, char **argv)
 {
@@ -242,10 +150,20 @@ void main_function(int argc, char **argv)
     avg[3] += gga.actualBest.Dun;
     avg[4] += gga.actualBest.ATT;
 
+	if(gga.actualBest.fitness() > allRunBestFitness){
+		allRunBestFitness = gga.actualBest.fitness();
+		bestFitnessMetrics[0] = gga.actualBest.D[0];
+		bestFitnessMetrics[1] = gga.actualBest.D[1];
+		bestFitnessMetrics[2] = gga.actualBest.D[2];
+		bestFitnessMetrics[3] = gga.actualBest.Dun;
+		bestFitnessMetrics[4] = gga.actualBest.ATT;
+	}
+
 }
 
 int main(int argc, char** argv)
 {
+	allRunBestFitness = -INFINITY;
     gatherAllInfo();
     //    createInitialSolution();
     //    exit(0);
@@ -267,7 +185,10 @@ int main(int argc, char** argv)
     }
     fout << "Avg D0:" << avg[0] / parameters["run"] << endl << "Avg D1:" << avg[1] / parameters["run"] << endl << "Avg D2:" << avg[2] / parameters["run"] << endl << "Avg Dun:" << avg[3] / parameters["run"] << endl << "Avg ATT:" << avg[4] / parameters["run"] << endl;
     fout.close();
-    return (EXIT_SUCCESS);
+
+	cout << "All Run Best : " << bestFitnessMetrics[0] << endl << bestFitnessMetrics[1] << endl << bestFitnessMetrics[2] << endl << bestFitnessMetrics[3] << endl << bestFitnessMetrics[4] << endl << allRunBestFitness << endl;
+
+	return (EXIT_SUCCESS);
 }
 
 double penalizability(int a, int b, int r)
