@@ -24,7 +24,10 @@ double penalizability(int a, int b, int c);
 
 
 ofstream fout("best.txt");
-double avg[5], bestFitnessMetrics[5], allRunBestFitness;
+double avg[5];
+Indi bestSolution;
+double bestFitness = -INFINITY;
+
 
 void main_function(int argc, char **argv)
 {
@@ -41,8 +44,10 @@ void main_function(int argc, char **argv)
 
     //selection
     eoDetTournamentSelect<Indi> selectOne(parameters["tFit"]);
-    double perc = (parameters["popSize"] - parameters["eilte"]) / parameters["popSize"]; //eilte
-    eoSelectPerc<Indi> select(selectOne, perc);
+    //double perc = (parameters["popSize"] - parameters["eilte"]) / parameters["popSize"]; //eilte
+    unsigned parentNum = parameters["popSize"] - parameters["eilte"]; 
+    //eoSelectPerc<Indi> select(selectOne, perc);
+    eoSelectNumber<Indi> select(selectOne, parentNum);
 
     //crossover
     RouteSetQuadCrossover<Indi> xover(parameters["pSwap"]);
@@ -152,20 +157,14 @@ void main_function(int argc, char **argv)
     avg[3] += gga.actualBest.Dun;
     avg[4] += gga.actualBest.ATT;
 
-	if(gga.actualBest.fitness() > allRunBestFitness){
-		allRunBestFitness = gga.actualBest.fitness();
-		bestFitnessMetrics[0] = gga.actualBest.D[0];
-		bestFitnessMetrics[1] = gga.actualBest.D[1];
-		bestFitnessMetrics[2] = gga.actualBest.D[2];
-		bestFitnessMetrics[3] = gga.actualBest.Dun;
-		bestFitnessMetrics[4] = gga.actualBest.ATT;
-	}
-
+    if(gga.actualBest.fitness() > bestFitness){
+        bestSolution = gga.actualBest;
+        bestFitness = gga.actualBest.fitness();
+    }
 }
 
 int main(int argc, char** argv)
 {
-	allRunBestFitness = -INFINITY;
     gatherAllInfo();
     //    createInitialSolution();
     //    exit(0);
@@ -188,9 +187,8 @@ int main(int argc, char** argv)
     fout << "Avg D0:" << avg[0] / parameters["run"] << endl << "Avg D1:" << avg[1] / parameters["run"] << endl << "Avg D2:" << avg[2] / parameters["run"] << endl << "Avg Dun:" << avg[3] / parameters["run"] << endl << "Avg ATT:" << avg[4] / parameters["run"] << endl;
     fout.close();
 
-	cout << "All Run Best : " << bestFitnessMetrics[0] << endl << bestFitnessMetrics[1] << endl << bestFitnessMetrics[2] << endl << bestFitnessMetrics[3] << endl << bestFitnessMetrics[4] << endl << allRunBestFitness << endl;
-
-	return (EXIT_SUCCESS);
+    cout << "All Run Best : " << bestSolution << endl << bestSolution.D[0] << endl << bestSolution.D[1] << endl << bestSolution.D[2] << endl << bestSolution.Dun << endl << bestSolution.ATT << endl << bestSolution.fitness() << endl;
+    return (EXIT_SUCCESS);
 }
 
 double penalizability(int a, int b, int r)

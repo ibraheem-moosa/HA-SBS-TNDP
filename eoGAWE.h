@@ -32,6 +32,7 @@
 #include <eoPop.h>
 #include <eoSelectOne.h>
 #include <eoSelectPerc.h>
+#include <eoSelectNumber.h>
 #include <eoEvalFunc.h>
 #include <eoAlgo.h>
 #include <apply.h>
@@ -72,7 +73,8 @@ public:
     }
 
     eoGAWE(
-           eoSelectPerc<EOT>& _select,
+           //eoSelectPerc<EOT>& _select,
+           eoSelectNumber<EOT>& _select,
            eoQuadOp<EOT>& _cross,
            eoMonOp<EOT>& _mutate,
            eoEvalFunc<EOT>& _eval,
@@ -187,7 +189,8 @@ private:
     // eoInvalidateQuadOp invalidates the embedded operator
     eoInvalidateQuadOp<EOT> cross;
     float crossoverRate;
-    eoSelectPerc<EOT> select;
+    //eoSelectPerc<EOT> select;
+    eoSelectNumber<EOT> select;
     unsigned elite;
     eoEvalFunc<EOT>& eval;
 
