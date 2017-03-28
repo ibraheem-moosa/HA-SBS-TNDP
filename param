@@ -8,11 +8,10 @@ tFit 10
 maxGen 350
 maxIter 3
 beta 0.8
-run 5
+run 1
 stableCount 20
 e 0.7
 minGen 10
 minFitnessRatio 0.0005
 minRouteLength 10
 maxRouteLength 22
-

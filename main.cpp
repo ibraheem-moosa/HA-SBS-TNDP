@@ -125,11 +125,6 @@ void main_function(int argc, char **argv)
                 }
             }
 
-            for (int i = 0; i < pop.size(); i++)
-            {
-                pop[i].invalidate();
-                adjustedEval(pop[i]);
-            }
 
             for (int i = 0; i < VERTICES_NO; i++)
             {
@@ -138,6 +133,13 @@ void main_function(int argc, char **argv)
                     p[r][j][i] = p[r][i][j] = (1-parameters["e"])*p[r][i][j];
                 }
             }
+        }
+
+
+        for (int i = 0; i < pop.size(); i++)
+        {
+            pop[i].invalidate();
+            adjustedEval(pop[i]);
         }
     }
     cout << "FINAL Population size\n" << pop.size() << endl;

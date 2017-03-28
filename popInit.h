@@ -45,7 +45,6 @@ void popInit(eoPop< RouteSet<double> >& _pop, int popSize, int routeSetSize, eoE
                initL.resize(newSize); 
             }
         } 
-	//cout << initL.size() << endl;
         
         initR.setR(initL);
         initR.setNodeList(initNodeList);

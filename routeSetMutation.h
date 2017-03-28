@@ -111,6 +111,7 @@ public:
 
             if (mutRoute.mutableR().size() < parameters["minRouteLength"]){ //path is too small, no deletion just return
                 //cout << "Going to APPEND\n";
+                cout << "Going to APPEND\n";
                 goto APPEND; 
             }
 DELETE:     mutRoute.erase(it[selectedEnd]);
@@ -121,6 +122,7 @@ DELETE:     mutRoute.erase(it[selectedEnd]);
             
             if (mutRoute.mutableR().size() > parameters["maxRouteLength"]){ //path is too small, no deletion just return
                 //cout << "Going to DELETE\n";
+                cout << "Going to DELETE\n";
                 goto DELETE;
             }
 
