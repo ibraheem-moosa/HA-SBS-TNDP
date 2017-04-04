@@ -108,7 +108,7 @@ public:
 
     int size()
     {
-        rS.size();
+        return rS.size();
     }
 
 //    bool isTrouble()

@@ -15,7 +15,7 @@
 
 #define DEMAND_FILE "M2OriginDestination.txt"  //change
 #define TRAVEL_TIME_FILE "M2Distances.txt"     //change
-#define INITIAL_ROUTE_SET "inputPathM2.txt"    //change
+#define INITIAL_ROUTE_SET "./heuristics/inputPathM2_new_heuristics.txt"    //change
 #define VERTICES_NO 110                           //change
 #undef INFINITY
 #define INFINITY INT_MAX

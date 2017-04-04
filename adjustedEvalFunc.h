@@ -28,6 +28,8 @@ public:
      *                  it should stay templatized to be usable
      *                  with any fitness type
      */
+#pragma GCC push_options
+#pragma GCC optimize("O3")
     void operator()(EOT & _eo)
     {
         if (_eo.invalid())
@@ -37,10 +39,11 @@ public:
 
             vector< Route<double> > & routeSet = _eo.mutableRs();
             double pSum = 0;
+            list<int>::const_iterator next, it; 
             for (int r = 0; r < routeSet.size(); r++)
             {
-                list<int>::const_iterator next = routeSet[r].R().begin();
-                list<int>::const_iterator it = next++;
+                next = routeSet[r].R().begin();
+                it = next++;
                 for (; next != routeSet[r].R().end(); it++, next++)
                 {
                     int i = *it;
@@ -55,6 +58,7 @@ public:
             _eo.fitness(adjustedFitness); //minimize
         }
     }
+#pragma GCC pop_options
 private:
     RouteSetEvalFunc<RouteSet<double > > _actualEval;
 };

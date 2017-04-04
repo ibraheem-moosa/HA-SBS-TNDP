@@ -10,7 +10,8 @@
 
 #include "route.h"
 
-
+#pragma GCC push_options
+#pragma GCC optimize("O3")
 double routeFitness(const Route<double>& EO) 
 {
     int sum = 0;
@@ -27,6 +28,6 @@ double routeFitness(const Route<double>& EO)
     }
     return 1.0/sum;
 }
-
+#pragma GCC pop_options
 #endif	/* _ROUTEFITNESS_H */
 

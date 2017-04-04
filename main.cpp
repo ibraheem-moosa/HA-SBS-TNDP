@@ -40,12 +40,12 @@ void main_function(int argc, char **argv)
 
     //population
     eoPop<Indi> pop;
-    popInit(pop, parameters["popSize"], parameters["routeSetSize"], adjustedEval); //changed
+    popInitDiverse(pop, parameters["popSize"], parameters["routeSetSize"], adjustedEval); //changed
 
     //selection
     eoDetTournamentSelect<Indi> selectOne(parameters["tFit"]);
     //double perc = (parameters["popSize"] - parameters["eilte"]) / parameters["popSize"]; //eilte
-    unsigned parentNum = parameters["popSize"] - parameters["eilte"]; 
+    unsigned parentNum = parameters["popSize"] - parameters["elite"]; 
     //eoSelectPerc<Indi> select(selectOne, perc);
     eoSelectNumber<Indi> select(selectOne, parentNum);
 

@@ -37,6 +37,7 @@
 #include <eoAlgo.h>
 #include <apply.h>
 #include <iostream>
+#include <cmath>
 
 /** The Simple Genetic Algorithm,
  *
@@ -89,7 +90,8 @@ public:
     {
         //best = NULL;
     }
-
+#pragma GCC push_options
+#pragma GCC optimize ("O3")
     void operator()(eoPop<EOT>& _pop)
     {
         eoPop<EOT> Q;
@@ -99,7 +101,7 @@ public:
         do
         {
             select(_pop, Q); //select parents from _pop and put in Q
-            //std::cout<<"Print Q" <<Q;
+            //std::cout<<"Print Q " <<Q.size() << std::endl;
 
             for (unsigned i = 0; i < (_pop.size() - elite) / 2; i++)
             {
@@ -147,6 +149,18 @@ public:
                 actualBest = competitor;
             }
             std::cout << actualBest.D[0] << ',' << actualBest.D[1] << ',' << actualBest.D[2] << ',' << actualBest.Dun << ',' << actualBest.ATT  << ',' << actualBest.fitness()<< std::endl;
+            double average_fitness = 0.0;
+            for(auto individual : _pop) {
+                average_fitness += individual.fitness();
+            }
+            average_fitness /= _pop.size();
+            double std_dev = 0.0;
+            for(auto individual : _pop) {
+                std_dev += (individual.fitness() - average_fitness) * (individual.actualFitness - average_fitness);
+            }
+            std_dev /= _pop.size();
+            std_dev = sqrt(std_dev);
+            std::cout << std_dev << std::endl;
 
             _pop.swap(Q);
             apply<EOT > (eval, _pop); //Assess Fitness
@@ -173,13 +187,13 @@ public:
             else
             {
                 prevBest = best.fitness();
-                stableCounter = 0;
+                stableCounter--;
             }
             gen++;
-
+            //printf("%d\n", _pop.size());
         }while (genCount--);
     }
-
+#pragma GCC pop_options
 private:
 
     eoContinue<EOT>& cont;
