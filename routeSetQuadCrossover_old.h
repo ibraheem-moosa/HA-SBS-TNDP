@@ -7,7 +7,6 @@
 
 #ifndef _ROUTESETQUADCROSSOVER_H
 #define	_ROUTESETQUADCROSSOVER_H
-#include <stdlib.h>
 
 //#include <eoOp.h>
 
@@ -49,62 +48,20 @@ public:
      * @param _genotype1 The first parent
      * @param _genotype2 The second parent
      */
-
-    int routeSimilarity(Route<double> r1, Route<double> r2)
-    {
-        const list<int> l1 = r1.R();
-        const list<int> l2 = r2.R();
-        int numOfCommonNodes = 0;
-        for(int n1 : l1)
-        {
-            bool found = false;
-            for(int n2 : l2)
-            {
-                if(n1 == n2) {
-                    found = true;
-                    break;
-                }
-            }
-            if(found)
-                numOfCommonNodes++;
-        }
-        return numOfCommonNodes;
-    }
-
     bool operator()(GenotypeT& _genotype1, GenotypeT& _genotype2)
     {
         bool modified(false);
        // bool bad2 = _genotype2.isTrouble();
         // START code for crossover of _genotype1 and _genotype2 objects
-        vector<bool> in_2_from_1(_genotype2.size(), false);     
-                //those routes in 2 that have come from 1 after being swapped in this crossover
-
         for (int i = 0; i < _genotype1.size(); i++)
         {
             if (pSwap >= rng.uniform())
             {
-                /*
-                // now look for most similar route in 2
-                int maxRouteSimilarity = 0;
-                int mostSimilarRoute = 0;
-                for(int j = 0; j < _genotype2.size(); j++)
-                {
-                    if(in_2_from_1[j]) continue; //this one came from 1, no need to swap back
-                    int s = routeSimilarity(_genotype1[i], _genotype2[j]);
-                    if(s > maxRouteSimilarity)
-                    {
-                        maxRouteSimilarity = s;
-                        mostSimilarRoute = j;
-                    }
-                }
-                */
-                int j = rand() % _genotype2.size();
                 Route<double> temp = _genotype1[i];
-                _genotype1[i] = _genotype2[j];
-                _genotype2[j] = temp;
+                _genotype1[i] = _genotype2[i];
+                _genotype2[i] = temp;
                 modified = true;
-                //in_2_from_1[mostSimilarRoute] = true;
-                //printf("%lf\n", (double)maxRouteSimilarity / _genotype1[i].size());
+
             }
         }
         /** Requirement

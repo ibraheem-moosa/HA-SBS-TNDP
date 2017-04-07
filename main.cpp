@@ -14,7 +14,7 @@ using namespace std;
 #include "popInit.h"
 #include "routeFitness.h"
 #include "routeSetEvalFunc.h"
-#include "routeSetQuadCrossover.h"
+#include "routeSetQuadCrossover_old.h"
 #include "routeSetMutation.h"
 #include "adjustedEvalFunc.h"
 
@@ -32,7 +32,7 @@ double bestFitness = -INFINITY;
 void main_function(int argc, char **argv)
 {
     rng.reseed(time(0));
-
+    srand(time(0));
     //fitness evaluators
     eoEvalFuncPtr< Route<double> > routeEval(routeFitness);
     RouteSetEvalFunc<Indi> routeSetEval;

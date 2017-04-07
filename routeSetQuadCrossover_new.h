@@ -7,7 +7,6 @@
 
 #ifndef _ROUTESETQUADCROSSOVER_H
 #define	_ROUTESETQUADCROSSOVER_H
-#include <stdlib.h>
 
 //#include <eoOp.h>
 
@@ -83,7 +82,6 @@ public:
         {
             if (pSwap >= rng.uniform())
             {
-                /*
                 // now look for most similar route in 2
                 int maxRouteSimilarity = 0;
                 int mostSimilarRoute = 0;
@@ -97,13 +95,11 @@ public:
                         mostSimilarRoute = j;
                     }
                 }
-                */
-                int j = rand() % _genotype2.size();
                 Route<double> temp = _genotype1[i];
-                _genotype1[i] = _genotype2[j];
-                _genotype2[j] = temp;
+                _genotype1[i] = _genotype2[mostSimilarRoute];
+                _genotype2[mostSimilarRoute] = temp;
                 modified = true;
-                //in_2_from_1[mostSimilarRoute] = true;
+                in_2_from_1[mostSimilarRoute] = true;
                 //printf("%lf\n", (double)maxRouteSimilarity / _genotype1[i].size());
             }
         }
