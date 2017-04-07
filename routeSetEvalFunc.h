@@ -17,18 +17,13 @@
 #pragma GCC optimize("O3")
 void floydWarshall(vector< vector<int> > & sDist, int vertexNo, vector< vector<int> > & transfer)
 {
-//    printf("%d\n", vertexNo);
-//    int non_edge_count = 0;
     for (int k = 0; k < vertexNo; k++)
     {
         for (int i = 0; i < vertexNo; i++)
         {
             int sDist_i_k = sDist[i][k];
-            if (sDist_i_k == INFINITY) {
-//                non_edge_count++;
+            if(sDist_i_k == INFINITY)
                 continue;
-            }
-            
             for (int j = i + 1; j < vertexNo; j++)
             {
                 if (sDist[k][j] == INFINITY)
@@ -43,7 +38,6 @@ void floydWarshall(vector< vector<int> > & sDist, int vertexNo, vector< vector<i
             }
         }
     }
-//    printf("%d\n", non_edge_count / vertexNo);
 }
 #pragma GCC pop_options
 template <class EOT>
@@ -65,8 +59,6 @@ public:
      *                  it should stay templatized to be usable
      *                  with any fitness type
      */
-#pragma GCC push_options
-#pragma GCC optimize("O3")
     void operator()(EOT & _eo)
     {
         // test for invalid to avoid recomputing fitness of unmodified individuals
@@ -81,10 +73,10 @@ public:
             vector<int> E2O;
             vector<int> routeNo;
             vector< vector<int> > newMap(VERTICES_NO, vector<int> (routeSet.size(), 0));
-            int total_route_length = 0;
+            //int total_route_length = 0;
             for (int r = 0; r < routeSet.size(); r++)
             {
-                total_route_length += routeSet[r].size();
+                //total_route_length += routeSet[r].size();
                 list<int>::const_iterator it = routeSet[r].R().begin();
                 for (; it != routeSet[r].R().end(); it++)
                 {
@@ -94,7 +86,7 @@ public:
                     routeNo.push_back(r);
                 }
             }
-            printf("total route length %d new vertex count %d\n", total_route_length, E2O.size()); 
+//            printf("total route length %d new vertex count %d\n", total_route_length, E2O.size()); 
             const int newVertexCount = E2O.size();
             vector< vector<int> > eDist(newVertexCount, vector<int>(newVertexCount, 0));
             vector< vector<int> > eTransfer(newVertexCount, vector<int>(newVertexCount, 0));
@@ -130,6 +122,7 @@ public:
 
                 }
             }
+            /*
             int edgeCountInNewGraph = 0;
             for(int i = 0; i < newVertexCount; i++) {
                 for(int j = 0; j < newVertexCount; j++) {
@@ -138,6 +131,7 @@ public:
                 }
             }
             printf("In New Graph V: %d E: %d\n", newVertexCount, edgeCountInNewGraph);
+            */
             floydWarshall(eDist, newVertexCount, eTransfer);
 
             for (int i = 0; i < VERTICES_NO; i++)
@@ -205,7 +199,6 @@ public:
 
         }
     }
-#pragma GCC pop_options
 private:
     // START Private data of an RouteSetEvalFunc object
     //  varType anyVariable;		   // for example ...

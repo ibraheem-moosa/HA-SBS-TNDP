@@ -48,7 +48,7 @@ void popInit(eoPop< RouteSet<double> >& _pop, int popSize, int routeSetSize, eoE
         
         initR.setR(initL);
         initR.setNodeList(initNodeList);
-        //cout << initL.front() << " " << initL.back() << " " << DS[initL.front()][initL.back()] << endl;
+        cout << initL.front() << " " << initL.back() << " " << DS[initL.front()][initL.back()] << endl;
 	initR.fitness(1.0 / DS[initL.front()][initL.back()]); //fitness 1/ds
         initV.push_back(initR);
     }
