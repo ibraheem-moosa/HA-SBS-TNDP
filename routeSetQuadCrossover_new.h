@@ -89,7 +89,7 @@ public:
                 {
                     if(in_2_from_1[j]) continue; //this one came from 1, no need to swap back
                     int s = routeSimilarity(_genotype1[i], _genotype2[j]);
-                    if(s > maxRouteSimilarity)
+                    if(s >= maxRouteSimilarity)
                     {
                         maxRouteSimilarity = s;
                         mostSimilarRoute = j;

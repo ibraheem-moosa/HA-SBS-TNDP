@@ -1,12 +1,12 @@
 routeSetSize 56
-pSwap 0.0178571428571428567
+pSwap 0.017857
 popSize 18
 elite 2
-pSm 1.0
+pSm 0.7
 pDelete 0.4
 tFit 10
 maxGen 250
-run 1
+run 5
 stableCount 20
 e 0.7
 minGen 1

@@ -6,8 +6,8 @@ typedef long long ll;
 #define mem(list, val) memset(list, (val), sizeof(list))
 #define pb push_back
 
-typedef vector<int> Route;
-typedef vector<vector<int> > RouteSet;
+typedef vector<int> _Route;
+typedef vector<vector<int> > _RouteSet;
 typedef vector<vector<double> > Matrix;
 
 #define MAX 200
@@ -118,7 +118,7 @@ double normalize(Matrix &mat)
     return mx;
 }
 
-status getBestRoute(int from, int to, Matrix &distance, Matrix &demand, Route &ret, double dw)
+status getBestRoute(int from, int to, Matrix &distance, Matrix &demand, _Route &ret, double dw)
 {
 	//cout << "from: " << from << " to: " << to << " demand: " << demand[from][to] << endl; 
 
@@ -183,7 +183,7 @@ status getBestRoute(int from, int to, Matrix &distance, Matrix &demand, Route &r
         return NO_PATH;
     }
 
-    Route temp;
+    _Route temp;
 
 	int cur = to;
 	temp.push_back(cur);
@@ -205,7 +205,7 @@ status getBestRoute(int from, int to, Matrix &distance, Matrix &demand, Route &r
 	
 }
 
-bool recur(Matrix &distance, Matrix &demand, Matrix &choice, Route &route, double dw, int from, int to = -1) ///generates a single route
+bool recur(Matrix &distance, Matrix &demand, Matrix &choice, _Route &route, double dw, int from, int to = -1) ///generates a single route
 {	
 	//getchar();
 	
@@ -250,7 +250,7 @@ bool recur(Matrix &distance, Matrix &demand, Matrix &choice, Route &route, doubl
 	return recur(distance, demand, choice, route, dw, from, to);
 }
 
-void getBestRouteSet(Matrix &dist, Matrix &demand, int numberOfRoutes, RouteSet &RS, double dw)
+void getBestRouteSet(Matrix &dist, Matrix &demand, int numberOfRoutes, _RouteSet &RS, double dw)
 {
     //puts("Inside genBestRouteSet");
     Matrix tempDist, tempDemand = demand, choice;
@@ -264,7 +264,7 @@ void getBestRouteSet(Matrix &dist, Matrix &demand, int numberOfRoutes, RouteSet 
 
         if(popularity[from] > popularity[to]) swap(from, to);
         
-        Route route;
+        _Route route;
         bool added = recur(tempDist, tempDemand, choice, route, dw, from, to);
         
         if(!added) i--;
@@ -278,7 +278,7 @@ void getBestRouteSet(Matrix &dist, Matrix &demand, int numberOfRoutes, RouteSet 
     ///getHighestDemandPair(tempDemand);
 }
 
-bool checkRoute(const Route &route, const Matrix &distance, int maxRouteSize, int minRouteSize)
+bool checkRoute(const _Route &route, const Matrix &distance, int maxRouteSize, int minRouteSize)
 {
 	/*
     if(route.size() > maxRouteSize)
@@ -343,7 +343,7 @@ int main(int argc, char **argv)
     for(int r = 0; r < num_of_route_sets; r++)
     {
         //printf("generating %d\n", r);
-        RouteSet result;
+        _RouteSet result;
         double dw = r * dw_step;
         getBestRouteSet(dist, demand, atoi(argv[3]), result, dw);
         for(int i=0; i<result.size(); i++){

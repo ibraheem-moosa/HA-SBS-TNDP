@@ -1,5 +1,4 @@
 #include <bits/stdc++.h>
-
 using namespace std;
 
 typedef long long ll;
@@ -7,8 +6,8 @@ typedef long long ll;
 #define mem(list, val) memset(list, (val), sizeof(list))
 #define pb push_back
 
-typedef vector<int> Route;
-typedef vector<vector<int> > RouteSet;
+typedef vector<int> _Route;
+typedef vector<vector<int> > _RouteSet;
 typedef vector<vector<double> > Matrix;
 
 #define MAX 200
@@ -16,8 +15,7 @@ typedef vector<vector<double> > Matrix;
 
 enum status {NEW_ROUTE_ADDED, SIZE_OVERFLOW, NO_PATH};
 
-
-int minRouteSize, maxRouteSize, num_of_route_sets;
+int minRouteSize, maxRouteSize;
 
 vector<double> popularity;
 
@@ -120,7 +118,7 @@ double normalize(Matrix &mat)
     return mx;
 }
 
-status getBestRoute(int from, int to, Matrix &distance, Matrix &demand, Route &ret, double demand_weight)
+status getBestRoute(int from, int to, Matrix &distance, Matrix &demand, _Route &ret, double dw)
 {
 	//cout << "from: " << from << " to: " << to << " demand: " << demand[from][to] << endl; 
 
@@ -132,7 +130,7 @@ status getBestRoute(int from, int to, Matrix &distance, Matrix &demand, Route &r
     ///transform to fit shortest path problem
     for(int i=0; i <tempDist.size(); i++) {
         for(int j=0; j<tempDist[i].size(); j++) {
-            if(tempDist[i][j] <= 1.0) tempDist[i][j] = (1 - demand_weight) * tempDist[i][j] +  demand_weight * 0.5 * (1/(tempDemand[i][to]+1) + 1/(tempDemand[j][to]+1));
+            if(tempDist[i][j] <= 1.0) tempDist[i][j] = (1 - dw) * tempDist[i][j] +  dw * 0.5 * (1/(tempDemand[i][to]+1) + 1/(tempDemand[j][to]+1));
         }
     }
     
@@ -185,7 +183,7 @@ status getBestRoute(int from, int to, Matrix &distance, Matrix &demand, Route &r
         return NO_PATH;
     }
 
-    Route temp;
+    _Route temp;
 
 	int cur = to;
 	temp.push_back(cur);
@@ -207,7 +205,7 @@ status getBestRoute(int from, int to, Matrix &distance, Matrix &demand, Route &r
 	
 }
 
-bool recur(Matrix &distance, Matrix &demand, Matrix &choice, Route &route, int from, int to = -1, double demand_weight = 0.5) ///generates a single route
+bool recur(Matrix &distance, Matrix &demand, Matrix &choice, _Route &route, double dw, int from, int to = -1) ///generates a single route
 {	
 	//getchar();
 	
@@ -216,7 +214,7 @@ bool recur(Matrix &distance, Matrix &demand, Matrix &choice, Route &route, int f
 		return (route.size() >= minRouteSize && route.size() <= maxRouteSize); ///no more demand left
 	}
 	
-	status ret = getBestRoute(from, to, distance, demand, route, demand_weight); ///add a route (part)
+	status ret = getBestRoute(from, to, distance, demand, route, dw); ///add a route (part)
 	
 	if(ret == SIZE_OVERFLOW){
 		//cout << "size overflow\n";
@@ -229,7 +227,7 @@ bool recur(Matrix &distance, Matrix &demand, Matrix &choice, Route &route, int f
 		choice[to][from] = 0;
 		to = highestDemandDestination(from, choice);
 		
-		return recur(distance, demand, choice, route, from, to, demand_weight);
+		return recur(distance, demand, choice, route, dw, from, to);
 	}
 	
 	//segment added to route
@@ -249,11 +247,12 @@ bool recur(Matrix &distance, Matrix &demand, Matrix &choice, Route &route, int f
 	
 	from = to;
 	to = highestDemandDestination(from, choice);
-	return recur(distance, demand, choice, route, from, to, demand_weight);
+	return recur(distance, demand, choice, route, dw, from, to);
 }
 
-void getBestRouteSet(Matrix &dist, Matrix &demand, int numberOfRoutes, RouteSet &RS, double demand_weight)
+void getBestRouteSet(Matrix &dist, Matrix &demand, int numberOfRoutes, _RouteSet &RS, double dw)
 {
+    //puts("Inside genBestRouteSet");
     Matrix tempDist, tempDemand = demand, choice;
 
     for(int i=0; i<numberOfRoutes; i++){
@@ -263,10 +262,10 @@ void getBestRouteSet(Matrix &dist, Matrix &demand, int numberOfRoutes, RouteSet 
         pair<int, int> pp = getHighestDemandPair(choice);
 		int from = pp.first, to = pp.second;
 
-        if(popularity[from] > popularity[to]) swap(from, to);
+        //if(popularity[from] > popularity[to]) swap(from, to);
         
-        Route route;
-        bool added = recur(tempDist, tempDemand, choice, route, from, to, demand_weight);
+        _Route route;
+        bool added = recur(tempDist, tempDemand, choice, route, dw, from, to);
         
         if(!added) i--;
         else{
@@ -279,7 +278,7 @@ void getBestRouteSet(Matrix &dist, Matrix &demand, int numberOfRoutes, RouteSet 
     ///getHighestDemandPair(tempDemand);
 }
 
-bool checkRoute(const Route &route, const Matrix &distance, int maxRouteSize, int minRouteSize)
+bool checkRoute(const _Route &route, const Matrix &distance, int maxRouteSize, int minRouteSize)
 {
 	/*
     if(route.size() > maxRouteSize)
@@ -312,51 +311,4 @@ bool checkRoute(const Route &route, const Matrix &distance, int maxRouteSize, in
         assert(distance[route[i]][route[i + 1]] != -1); 
     }
     return true;
-}
-
-int main(int argc, char **argv)
-{
-	if(argc < 7) {
-        printf("Usage: distances_file demands_file num_of_routes minRouteSize maxRouteSize num_of_route_sets\n");
-        return 1;
-    }
-
-    Matrix dist, demand;
-
-    readData(argv[1], dist);
-    readData(argv[2], demand);
-    
-    minRouteSize = atoi(argv[4]);
-    maxRouteSize = atoi(argv[5]);
-    
-    num_of_route_sets = atoi(argv[6]);
-
-    int numberOfNodes = dist.size();
-    for(int i=0; i<numberOfNodes; i++) popularity.push_back(0);
-    for(int i=0; i<numberOfNodes; i++){
-        for(int j=0; j<numberOfNodes; j++) popularity[i] += demand[j][i];
-    }
-    
-    //cout << minRouteSize << endl;
-
-    //print_matrix<double>(dist);
-    //print_matrix<double>(demand);
-    
-    RouteSet result;
-    double demand_weight_step = 1.0 / (num_of_route_sets - 1);
-    for(int rs = 0; rs < num_of_route_sets; rs++) {
-        getBestRouteSet(dist, demand, atoi(argv[3]), result, demand_weight_step * rs);
-    
-        for(int i=0; i<result.size(); i++){
-            if(!checkRoute(result[i], dist, maxRouteSize, minRouteSize)) {
-               printf("Route is dangerous  %d \n", i);
-            }
-		    for(int j=0; j<result[i].size(); j++) cout << result[i][j] << ' ';
-		    cout << "-1\n";
-	    }
-	    result.clear();
-        puts("");
-	}
-
-	return 0;
 }

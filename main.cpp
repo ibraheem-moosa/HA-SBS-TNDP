@@ -14,7 +14,7 @@ using namespace std;
 #include "popInit.h"
 #include "routeFitness.h"
 #include "routeSetEvalFunc.h"
-#include "routeSetQuadCrossover_old.h"
+#include "routeSetQuadCrossover_new.h"
 #include "routeSetMutation.h"
 #include "adjustedEvalFunc.h"
 
@@ -166,6 +166,11 @@ void main_function(int argc, char **argv)
 int main(int argc, char** argv)
 {
     gatherAllInfo();
+
+	minRouteSize = parameters["minRouteLength"];
+	maxRouteSize = parameters["maxRouteLength"];
+
+	cout << "minRputeSize: " << minRouteSize << " maxRouteSize: " << maxRouteSize << endl;
     //    createInitialSolution();
     //    exit(0);
 

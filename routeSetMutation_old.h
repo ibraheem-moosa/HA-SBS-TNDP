@@ -16,7 +16,6 @@
 
 #include "route.h"
 #include "inputData.h"
-//#include "./heuristics/genRoute.h"
 
 template<class GenotypeT>
 int rouletteWheelForRoute(GenotypeT & _genotype, eoEvalFuncPtr< Route<double> >& _eval)
@@ -110,7 +109,7 @@ public:
         if (pDelete >= rng.uniform()) //delete a terminal
         {
 
-            if (mutRoute.mutableR().size() <= parameters["minRouteLength"]){ //path is too small, no deletion just return
+            if (mutRoute.mutableR().size() < parameters["minRouteLength"]){ //path is too small, no deletion just return
                 goto APPEND; 
             }
 DELETE:     mutRoute.erase(it[selectedEnd]);
@@ -119,7 +118,7 @@ DELETE:     mutRoute.erase(it[selectedEnd]);
         else //append a terminal
         {
             
-            if (mutRoute.mutableR().size() >= parameters["maxRouteLength"]){ //path is too small, no deletion just return
+            if (mutRoute.mutableR().size() > parameters["maxRouteLength"]){ //path is too small, no deletion just return
                 goto DELETE;
             }
 
@@ -153,11 +152,10 @@ APPEND:     vector<int> AdjListForSelected = AdjList[selectedNode];
            
             mutRoute.insert(it[selectedEnd], AdjListForSelected[toAddIndex]);
             mutRoute.nodeList[AdjListForSelected[toAddIndex]] = 1;
+
+
         }
 
-		assert(mutRoute.mutableR().size() >= minRouteSize);
-		assert(mutRoute.mutableR().size() <= maxRouteSize);
- 
        
         mutRoute.invalidate();
         return true;
@@ -191,6 +189,7 @@ public:
     }
 
     /// The class name. Used to display statistics
+
     string className() const
     {
         return "BigMutation";
@@ -208,44 +207,18 @@ public:
 
         //std::cout<<_genotype[mutIndex]<<std::endl;
 
-		Matrix tempDemand(demand);
-		
-		for(int i=0; i<_genotype.size(); i++){
-			if(i==mutIndex) continue;
-			const std::list<int>& _chrom = _genotype[i].R();
-			std::list<int>::const_iterator outer = _chrom.end();
-			for (outer--; outer != _chrom.begin(); outer--)
-			{
-				std::list<int>::const_iterator inner;
-				for (inner = _chrom.begin(); inner != outer; inner++)
-				{
-					tempDemand[*inner][*outer] = 0;
-					tempDemand[*outer][*inner] = 0;
-				}
-			}
-
-		}
-
-		int from = (_genotype[mutIndex].R().front()), to = (_genotype[mutIndex].R().back());
-		vector<int> result;
-		vector<vector<int> > resultRouteSet; //will contain only one route
-		
-		getBestRouteSet(dist, tempDemand, 1, resultRouteSet, rng.uniform());
-		assert(resultRouteSet[0].size() <= maxRouteSize);
-		assert(resultRouteSet[0].size() >= minRouteSize);
-		
-		
-		cout << "NEW PATH FOUND\n";
-		result = resultRouteSet[0];
-
-		list<int> newPath;
-		for(auto x : result) {
-			newPath.push_back(x);
-		}
-
-        mutRoute.setR(newPath); ///work here
+        int terminal[2];
+        terminal[0] = mutRoute.mutableR().front();
+        terminal[1] = mutRoute.mutableR().back();
+        int startNode = terminal[rng.flip()];
+        if(startNode > VERTICES_NO)
+        {
+            cout<<mutRoute<<endl;
+        }
+        int endNode = rouletteWheelForPath(startNode);
+        mutRoute.setR(sPath[startNode][endNode]);
         vector<int> newNodeList(VERTICES_NO, 0);
-        for (list<int>::iterator lit = newPath.begin(); lit != newPath.end(); lit++)
+        for (list<int>::iterator lit = sPath[startNode][endNode].begin(); lit != sPath[startNode][endNode].end(); lit++)
         {
             newNodeList[*lit] = 1;
         }

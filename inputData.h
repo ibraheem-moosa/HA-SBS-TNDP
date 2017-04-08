@@ -9,6 +9,8 @@
 #define	_INPUTDATA_H
 
 #include <climits>
+
+#include "./heuristics/genRoute.h"
 //#include <map>
 //#include <cstdlib>
 //#include <list>
@@ -26,6 +28,9 @@ using namespace std;
 
 int d[VERTICES_NO][VERTICES_NO];
 int tr[VERTICES_NO][VERTICES_NO];
+
+Matrix demand(VERTICES_NO, vector<double>(VERTICES_NO, 0)), dist(VERTICES_NO, vector<double>(VERTICES_NO, INFINITY));
+
 int sDist[VERTICES_NO][VERTICES_NO];
 int DS[VERTICES_NO][VERTICES_NO];
 double p[ROUTESETSIZE][VERTICES_NO][VERTICES_NO]; //phoremon
@@ -82,6 +87,14 @@ void readData()
             }
         }
     }
+
+	for(int i=0; i<dist.size(); i++){
+		for(int j=0; j<dist[i].size(); j++){
+			dist[i][j] = tr[i][j];
+			demand[i][j] = d[i][j];
+		}	
+	}
+
     fclose(file);
     fclose(file1);
 }
