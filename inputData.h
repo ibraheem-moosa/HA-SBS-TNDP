@@ -15,14 +15,14 @@
 //#include <cstdlib>
 //#include <list>
 
-#define DEMAND_FILE "M2OriginDestination.txt"  //change
-#define TRAVEL_TIME_FILE "M2Distances.txt"     //change
-#define INITIAL_ROUTE_SET "./heuristics/inputPathM2.txt"    //change
-#define VERTICES_NO 110                           //change
+#define DEMAND_FILE "M1OriginDestination.txt"  //change
+#define TRAVEL_TIME_FILE "M1Distances.txt"     //change
+#define INITIAL_ROUTE_SET "./heuristics/inputPathM1.txt"    //change
+#define VERTICES_NO 70                           //change
 #undef INFINITY
 #define INFINITY INT_MAX
 #define TRANSFER_PENALTY 5
-#define ROUTESETSIZE 56
+#define ROUTESETSIZE 15
 
 using namespace std;
 

@@ -1,4 +1,4 @@
-routeSetSize 56
+routeSetSize 15
 pSwap 0.017857
 popSize 18
 elite 2
@@ -12,7 +12,7 @@ e 0.7
 minGen 1
 minFitnessRatio 0.00001
 minRouteLength 10
-maxRouteLength 22
+maxRouteLength 30
 
 maxIter 1
 beta 0.8

@@ -100,6 +100,7 @@ public:
         int stableCounter = 0;
         do
         {
+	    double start_time = clock();
             select(_pop, Q); //select parents from _pop and put in Q
             //std::cout<<"Print Q " <<Q.size() << std::endl;
 
@@ -191,6 +192,7 @@ public:
             }
             gen++;
             //printf("%d\n", _pop.size());
+	    printf("Time: %lf\n", (clock() - start_time) / CLOCKS_PER_SEC);
         }while (genCount--);
     }
 #pragma GCC pop_options

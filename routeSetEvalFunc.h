@@ -13,6 +13,82 @@
 #include "routeSet.h"
 //#include "eoEvalFunc.h"
 //#include "inputData.h"
+
+
+struct vertex
+{
+    int id, d, p, t;
+    vertex(int _id, int _d, int _p, int _t) : id(_id), d(_d), p(_p), t(_t)
+    {
+    }
+    friend bool operator<(const vertex &l, const vertex &r)
+    {
+        return l.d > r.d;
+    }
+};
+
+
+struct djikstra_edge
+{
+    int to;
+    int weight;
+    bool isTransfer;
+    djikstra_edge(int _to, int _weight, bool _isTransfer) : to(_to), weight(_weight), isTransfer(_isTransfer)
+    {
+    }
+};
+
+
+#pragma GCC push_options
+#pragma GCC optimize("O3")
+void allPairShortestPath(vector < vector<djikstra_edge> > & eAdjList, vector <vector<int> > & dist, vector < vector <int> > & transfer)
+{
+    int V = eAdjList.size();
+    for(int i = 0; i < V; i++)
+    {
+        //find shortest path from i to all other vertices
+        vector<bool> visited(V, false);
+        vector<vertex> vertices(V, vertex(0, 1000000, -1, 0));
+        for(int j = 0; j < V; j++){
+            vertices[j].id = j;
+        }
+        vertices[i].d = 0;
+        priority_queue<vertex> Q;
+        Q.push(vertices[i]);
+        while(Q.size() != 0)
+        {
+            vertex u = Q.top();
+            Q.pop();
+            if(visited[u.id] == true) continue;
+            visited[u.id] = true;
+            for(djikstra_edge e : eAdjList[u.id])
+            {
+		if(vertices[u.id].d + e.weight < 0)
+			printf("%d %d\n", vertices[u.id].d, e.weight);
+		assert(vertices[u.id].d + e.weight >= 0);
+                if(visited[e.to]) continue;
+                if(vertices[e.to].d > vertices[u.id].d + e.weight)
+                {
+                    vertices[e.to].d = vertices[u.id].d + e.weight;
+                    vertices[e.to].p = u.id;
+                    if(e.isTransfer)
+                        vertices[e.to].t = vertices[u.id].t + 1;
+                    else
+                        vertices[e.to].t = vertices[u.id].t;
+                    Q.push(vertices[e.to]);
+                }
+            }
+        }
+        for(int j = 0; j < V; j++){
+            dist[i][j] = vertices[j].d;
+            transfer[i][j] = vertices[j].t;
+	    assert(dist[i][j] >= 0);
+        }
+    }
+}
+#pragma GCC pop_options
+
+
 #pragma GCC push_options
 #pragma GCC optimize("O3")
 void floydWarshall(vector< vector<int> > & sDist, int vertexNo, vector< vector<int> > & transfer)
@@ -40,6 +116,7 @@ void floydWarshall(vector< vector<int> > & sDist, int vertexNo, vector< vector<i
     }
 }
 #pragma GCC pop_options
+
 template <class EOT>
 class RouteSetEvalFunc : public eoEvalFunc<EOT>
 {
@@ -90,6 +167,7 @@ public:
             const int newVertexCount = E2O.size();
             vector< vector<int> > eDist(newVertexCount, vector<int>(newVertexCount, 0));
             vector< vector<int> > eTransfer(newVertexCount, vector<int>(newVertexCount, 0));
+            vector< vector<djikstra_edge> > eDistAdjList(newVertexCount);
             for (int i = 0; i < newVertexCount; i++)
             {
                 eDist[i][i] = 0;
@@ -99,6 +177,8 @@ public:
                     if (I == J)
                     {
                         eDist[i][j] = eDist[j][i] = TRANSFER_PENALTY;
+                        eDistAdjList[i].push_back(djikstra_edge(j, TRANSFER_PENALTY, true));
+                        eDistAdjList[j].push_back(djikstra_edge(i, TRANSFER_PENALTY, true));
                         eTransfer[i][j] = 1;
                     }
                     else
@@ -119,7 +199,12 @@ public:
                     int I = newMap[i][r];
                     int J = newMap[j][r];
                     eDist[J][I] = eDist[I][J] = tr[i][j];
-
+		    //assert(tr[i][j] != INFINITY);
+		    if(tr[i][j] != INFINITY)
+		    {
+                    	eDistAdjList[J].push_back(djikstra_edge(I, tr[i][j], false));
+                    	eDistAdjList[I].push_back(djikstra_edge(J, tr[i][j], false));
+		    }
                 }
             }
             /*
@@ -132,8 +217,19 @@ public:
             }
             printf("In New Graph V: %d E: %d\n", newVertexCount, edgeCountInNewGraph);
             */
+            //auto eDistCopy(eDist);
+            //auto eTransferCopy(eTransfer);
             floydWarshall(eDist, newVertexCount, eTransfer);
-
+	    //allPairShortestPath(eDistAdjList, eDist, eTransfer);
+            //allPairShortestPath(eDistAdjList, eDistCopy, eTransferCopy);
+            //for(int i = 0; i < newVertexCount; i++){
+            //    for(int j = 0; j < newVertexCount; j++){
+            //        assert(eDistCopy[i][j] == eDist[i][j]);
+            //        printf("%d ", eTransfer[i][j]);
+            //    }
+            //    printf("\n");
+            //}
+            //getchar();
             for (int i = 0; i < VERTICES_NO; i++)
             {
                 dist[i][i] = 0;
