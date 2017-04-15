@@ -63,9 +63,6 @@ void allPairShortestPath(vector < vector<djikstra_edge> > & eAdjList, vector <ve
             visited[u.id] = true;
             for(djikstra_edge e : eAdjList[u.id])
             {
-		if(vertices[u.id].d + e.weight < 0)
-			printf("%d %d\n", vertices[u.id].d, e.weight);
-		assert(vertices[u.id].d + e.weight >= 0);
                 if(visited[e.to]) continue;
                 if(vertices[e.to].d > vertices[u.id].d + e.weight)
                 {
@@ -82,7 +79,6 @@ void allPairShortestPath(vector < vector<djikstra_edge> > & eAdjList, vector <ve
         for(int j = 0; j < V; j++){
             dist[i][j] = vertices[j].d;
             transfer[i][j] = vertices[j].t;
-	    assert(dist[i][j] >= 0);
         }
     }
 }
@@ -199,11 +195,17 @@ public:
                     int I = newMap[i][r];
                     int J = newMap[j][r];
                     eDist[J][I] = eDist[I][J] = tr[i][j];
+
+		    // We should not have to do this check
 		    //assert(tr[i][j] != INFINITY);
 		    if(tr[i][j] != INFINITY)
 		    {
                     	eDistAdjList[J].push_back(djikstra_edge(I, tr[i][j], false));
                     	eDistAdjList[I].push_back(djikstra_edge(J, tr[i][j], false));
+		    }
+		    else
+		    {
+			printf("%d %d %d\n", r, i, j);
 		    }
                 }
             }
@@ -217,19 +219,8 @@ public:
             }
             printf("In New Graph V: %d E: %d\n", newVertexCount, edgeCountInNewGraph);
             */
-            //auto eDistCopy(eDist);
-            //auto eTransferCopy(eTransfer);
-            floydWarshall(eDist, newVertexCount, eTransfer);
-	    //allPairShortestPath(eDistAdjList, eDist, eTransfer);
-            //allPairShortestPath(eDistAdjList, eDistCopy, eTransferCopy);
-            //for(int i = 0; i < newVertexCount; i++){
-            //    for(int j = 0; j < newVertexCount; j++){
-            //        assert(eDistCopy[i][j] == eDist[i][j]);
-            //        printf("%d ", eTransfer[i][j]);
-            //    }
-            //    printf("\n");
-            //}
-            //getchar();
+            //floydWarshall(eDist, newVertexCount, eTransfer);
+	    allPairShortestPath(eDistAdjList, eDist, eTransfer);
             for (int i = 0; i < VERTICES_NO; i++)
             {
                 dist[i][i] = 0;

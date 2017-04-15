@@ -100,7 +100,10 @@ void popInitDiverse(eoPop< RouteSet<double> >& _pop, int popSize, int routeSetSi
                    initL.resize(newSize); 
                 }
             }
-            assert(initL.size() >= parameters["minRouteLength"]);
+            if(initL.size() < parameters["minRouteLength"]){
+		    printf("%d %d\n", i, iroute);
+		    exit(1);
+	    }
             
             initR.setR(initL);
             initR.setNodeList(initNodeList);

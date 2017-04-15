@@ -1,18 +1,18 @@
-routeSetSize 15
-pSwap 0.017857
-popSize 18
+routeSetSize 60
+pSwap 0.01666667
+popSize 25
 elite 2
-pSm 0.7
+pSm 1.0
 pDelete 0.4
 tFit 10
-maxGen 250
+maxGen 300
 run 5
 stableCount 20
 e 0.7
 minGen 1
 minFitnessRatio 0.00001
-minRouteLength 10
-maxRouteLength 30
+minRouteLength 12
+maxRouteLength 25
 
 maxIter 1
 beta 0.8

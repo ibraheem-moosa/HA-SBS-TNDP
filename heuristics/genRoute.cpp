@@ -38,20 +38,18 @@ void readData(string filename, Matrix &matrix)
 {
 	FILE *fp = fopen(filename.c_str(), "r");
 	
-    int siz;
-	double num;
+    int siz, num;
     fscanf(fp, "%d", &siz);
 
 	vector<double> temp;
     for(int i=0; i<siz; i++){
 		for(int j=0; j<siz; j++){
-			fscanf(fp, "%lf", &num);
-			temp.push_back(num);
+			fscanf(fp, "%d", &num);
+			temp.push_back((double)num);
 		}
 		matrix.push_back(temp);
 		temp.clear(); 
 	}
-
     fclose(fp);
 }
 
@@ -254,7 +252,6 @@ void getBestRouteSet(Matrix &dist, Matrix &demand, int numberOfRoutes, _RouteSet
 {
     //puts("Inside genBestRouteSet");
     Matrix tempDist, tempDemand = demand, choice;
-
     for(int i=0; i<numberOfRoutes; i++){
         tempDist = dist;
         choice = tempDemand;
@@ -288,7 +285,6 @@ bool checkRoute(const _Route &route, const Matrix &distance, int maxRouteSize, i
     */
         
     assert(route.size() >= minRouteSize && route.size() <= maxRouteSize);
-
     int n = distance.size();
     vector<bool> isInRoute(n, false);
 
@@ -308,7 +304,7 @@ bool checkRoute(const _Route &route, const Matrix &distance, int maxRouteSize, i
             return false;
         }
         */
-        assert(distance[route[i]][route[i + 1]] != -1); 
+        assert(distance[route[i]][route[i + 1]] != -1);
     }
     return true;
 }
@@ -328,7 +324,6 @@ int main(int argc, char **argv)
     minRouteSize = atoi(argv[4]);
     maxRouteSize = atoi(argv[5]);
     int num_of_route_sets = atoi(argv[6]);
-
     int numberOfNodes = dist.size();
     double dw_step = 1.0 / (num_of_route_sets - 1);
     for(int i=0; i<numberOfNodes; i++) popularity.push_back(0);
