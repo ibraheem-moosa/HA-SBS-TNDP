@@ -110,7 +110,7 @@ double normalize(Matrix &mat)
     if(mx == 0) return 0;
     for(int i=0; i<mat.size(); i++){
         for(int j=0; j<mat[i].size(); j++){
-            if(mat[i][j] == -1 || mat[i][j] == 0) mat[i][j] = INF; ///for no edge case
+            if(mat[i][j] == -1 || mat[i][j] == 0 || mat[i][j] >= INF) mat[i][j] = INF; ///for no edge case
             else mat[i][j] /= mx;
         }
     }
@@ -151,31 +151,31 @@ status getBestRoute(int from, int to, Matrix &distance, Matrix &demand, _Route &
     mem(dequed, false);
 
     while(!Q.empty()){
-		
-		int fr = Q.top().id;
-		//cout << fr <<endl;
-		
-        if(fr == to) break;
 
-        if(dequed[fr]){
-            Q.pop();
-            continue;
-        }
+	    int fr = Q.top().id;
+	    //cout << fr <<endl;
 
-        djDist[fr] = Q.top().dist;
-        dequed[fr] = true;
-        Q.pop();
+	    if(fr == to) break;
 
-		for(int i=0; i<tempDist[fr].size(); i++){
-			if(tempDist[fr][i] >= 1e6 || fr == i) continue;
+	    if(dequed[fr]){
+		    Q.pop();
+		    continue;
+	    }
 
-            if(djDist[i] > djDist[fr] + tempDist[fr][i]){
-				djDist[i] = djDist[fr] + tempDist[fr][i];
-                parent[i] = fr;
-                
-                Q.push(node(i, djDist[i]));
-            }
-        }
+	    djDist[fr] = Q.top().dist;
+	    dequed[fr] = true;
+	    Q.pop();
+
+	    for(int i=0; i<tempDist[fr].size(); i++){
+		    if(tempDist[fr][i] > 1.0 || fr == i) continue;
+
+		    if(djDist[i] > djDist[fr] + tempDist[fr][i]){
+			    djDist[i] = djDist[fr] + tempDist[fr][i];
+			    parent[i] = fr;
+
+			    Q.push(node(i, djDist[i]));
+		    }
+	    }
     }
 
     if(parent[to] == -1){ //no path
@@ -250,34 +250,6 @@ bool recur(Matrix &distance, Matrix &demand, Matrix &choice, _Route &route, doub
 	return recur(distance, demand, choice, route, dw, from, to);
 }
 
-void getBestRouteSet(Matrix &dist, Matrix &demand, int numberOfRoutes, _RouteSet &RS, double dw)
-{
-    //puts("Inside genBestRouteSet");
-    Matrix tempDist, tempDemand = demand, choice;
-
-    for(int i=0; i<numberOfRoutes; i++){
-        tempDist = dist;
-        choice = tempDemand;
-        
-        pair<int, int> pp = getHighestDemandPair(choice);
-		int from = pp.first, to = pp.second;
-
-        //if(popularity[from] > popularity[to]) swap(from, to);
-        
-        _Route route;
-        bool added = recur(tempDist, tempDemand, choice, route, dw, from, to);
-        
-        if(!added) i--;
-        else{
-			//cout << "route added\n";
-			RS.push_back(route);
-		}
-        
-    }
-    
-    ///getHighestDemandPair(tempDemand);
-}
-
 bool checkRoute(const _Route &route, const Matrix &distance, int maxRouteSize, int minRouteSize)
 {
 	/*
@@ -309,6 +281,43 @@ bool checkRoute(const _Route &route, const Matrix &distance, int maxRouteSize, i
         }
         */
         assert(distance[route[i]][route[i + 1]] != -1); 
+        assert(distance[route[i]][route[i + 1]] != INF); 
+        assert(distance[route[i]][route[i + 1]] != INFINITY); 
+        assert(distance[route[i]][route[i + 1]] < 1e9); 
     }
     return true;
 }
+
+void getBestRouteSet(Matrix &dist, Matrix &demand, int numberOfRoutes, _RouteSet &RS, double dw)
+{
+    //puts("Inside genBestRouteSet");
+    Matrix tempDist, tempDemand = demand, choice;
+
+    for(int i=0; i<numberOfRoutes; i++){
+        tempDist = dist;
+        choice = tempDemand;
+        
+        pair<int, int> pp = getHighestDemandPair(choice);
+		int from = pp.first, to = pp.second;
+
+        //if(popularity[from] > popularity[to]) swap(from, to);
+        
+        _Route route;
+        bool added = recur(tempDist, tempDemand, choice, route, dw, from, to);
+        
+        if(!added) i--;
+        else{
+			//cout << "route added\n";
+			RS.push_back(route);
+		}
+        
+    }
+    
+    for(auto route : RS)
+    {
+	assert(checkRoute(route, dist, maxRouteSize, minRouteSize));
+    } 
+    ///getHighestDemandPair(tempDemand);
+}
+
+

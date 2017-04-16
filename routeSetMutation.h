@@ -110,7 +110,7 @@ public:
         if (pDelete >= rng.uniform()) //delete a terminal
         {
 
-            if (mutRoute.mutableR().size() <= parameters["minRouteLength"]){ //path is too small, no deletion just return
+            if (mutRoute.mutableR().size() <= parameters["minRouteLength"]){
                 goto APPEND; 
             }
 DELETE:     mutRoute.erase(it[selectedEnd]);
@@ -119,7 +119,7 @@ DELETE:     mutRoute.erase(it[selectedEnd]);
         else //append a terminal
         {
             
-            if (mutRoute.mutableR().size() >= parameters["maxRouteLength"]){ //path is too small, no deletion just return
+            if (mutRoute.mutableR().size() >= parameters["maxRouteLength"]){
                 goto DELETE;
             }
 
@@ -159,7 +159,7 @@ APPEND:     vector<int> AdjListForSelected = AdjList[selectedNode];
 		assert(mutRoute.mutableR().size() <= maxRouteSize);
  
        
-        mutRoute.invalidate();
+               mutRoute.invalidate();
         return true;
         // END code for mutation of the _genotype object
     }
@@ -234,10 +234,12 @@ public:
 		assert(resultRouteSet[0].size() <= maxRouteSize);
 		assert(resultRouteSet[0].size() >= minRouteSize);
 		
-		
 		cout << "NEW PATH FOUND\n";
 		result = resultRouteSet[0];
-
+		for(int j = 0; j < result.size() - 1; j++)
+		{
+		    assert(tr[result[j]][result[j + 1]] != INFINITY);
+		}
 		list<int> newPath;
 		for(auto x : result) {
 			newPath.push_back(x);
