@@ -15,14 +15,14 @@
 //#include <cstdlib>
 //#include <list>
 
-#define DEMAND_FILE "M3OriginDestination.txt"  //change
-#define TRAVEL_TIME_FILE "M3Distances.txt"     //change
-#define INITIAL_ROUTE_SET "./heuristics/inputPathM3.txt"    //change
-#define VERTICES_NO 127                           //change
+#define DEMAND_FILE "M1OriginDestination.txt"  //change
+#define TRAVEL_TIME_FILE "M1Distances.txt"     //change
+#define INITIAL_ROUTE_SET "./heuristics/inputPathM1.txt"    //change
+#define VERTICES_NO 70                           //change
 #undef INFINITY
 #define INFINITY INT_MAX
 #define TRANSFER_PENALTY 5
-#define ROUTESETSIZE 60
+#define ROUTESETSIZE 15
 
 using namespace std;
 
@@ -81,8 +81,6 @@ void readData()
         {
             fscanf(file, "%d", &d[i][j]);
             fscanf(file1, "%d", &tr[i][j]);
-	    if(i == 22 && j == 126)
-		    printf("\n Attention %d \n", tr[i][j]);
             if (tr[i][j] != 0 && tr[i][j] != INFINITY)
             {
                 AdjList[i].push_back(j);

@@ -169,21 +169,13 @@ public:
             double fitnessImprovementRatio = (best.fitness() - prevBest) / fabs(prevBest);  
             if (fitnessImprovementRatio < this->minFitnessRatio)
             {
-                printf("ratio: %lf\n", fitnessImprovementRatio);
                 stableCounter++;
                 if (stableCounter == this->stableCount)
                 {
-                    _pop.shuffle();
-                    int replace = rng.uniform(0,2);//(_pop.size() - elite) / 4
-                    for (unsigned i = 0; i < replace; i++)
-                    {
-                        _pop[i] = this->initial;
-                    }
-                    //printf("Hello\n");
                     break;
                 }
                 prevBest = best.fitness();
-                
+                printf("ratio: %lf stable count: %d\n", fitnessImprovementRatio, stableCounter);
             }
             else
             {

@@ -53,10 +53,13 @@ void main_function(int argc, char **argv)
     RouteSetQuadCrossover<Indi> xover(parameters["pSwap"]);
 
     //mutations
+    RouteCrossMutation<Indi> rcM(routeEval, minRouteSize, maxRouteSize);
     BigMutation<Indi> bM(routeEval);
     SmallMutation<Indi> sM(parameters["pDelete"], routeEval);
+    
     eoPropCombinedMonOp<Indi> mutation(sM, parameters["pSm"]);
-    mutation.add(bM, 1 - parameters["pSm"]);
+    mutation.add(rcM, parameters["prcm"]);
+    mutation.add(bM, 1 - parameters["prcm"] - parameters["pSm"]);
 
     //stop after maxGen generations
     //eoGenContinue<Indi> continuator(parameters["minGen"], parameters[]);
