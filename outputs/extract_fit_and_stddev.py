@@ -8,7 +8,7 @@ fitness_list = []
 std_dev_list = []
 d0_list = []
 d1_list = []
-dun_list = []
+d2_list = []
 att_list = []
 
 go_for_fitness = False
@@ -25,7 +25,7 @@ for line in f:
             fitness_list[-1].append(fitness)
             d0_list[-1].append(float(line.split(',')[0]))
             d1_list[-1].append(float(line.split(',')[1]))
-            dun_list[-1].append(float(line.split(',')[2]))
+            d2_list[-1].append(float(line.split(',')[2]))
             att_list[-1].append(float(line.split(',')[-2]))
             go_for_fitness = False
             go_for_std_dev = True
@@ -41,7 +41,7 @@ for line in f:
         std_dev_list.append([])
         d0_list.append([])
         d1_list.append([])
-        dun_list.append([])
+        d2_list.append([])
         att_list.append([])
 
 
@@ -57,54 +57,56 @@ def movingaverage(interval, window_size):
 
 import matplotlib.pyplot as plt
 '''
-for i in range(min(5, len(fitness_list))):
+for i in range(min(ltp, len(fitness_list))):
     plt.plot(range(len(fitness_list[i])),normalize(fitness_list[i]))
     plt.plot(range(len(std_dev_list[i])),normalize(std_dev_list[i]))
     plt.legend(['fitness', 'std deviation of fitness'], loc='upper right')
     plt.show()
 '''
 
-for i in range(min(5, len(fitness_list))):
+ltp = 10
+
+for i in range(min(ltp, len(fitness_list))):
     plt.plot(range(len(fitness_list[i])),fitness_list[i])
 plt.ylabel('fitness')
 plt.xlabel('generation')
  
 plt.show()
 
-for i in range(min(5, len(fitness_list))):
+for i in range(min(ltp, len(fitness_list))):
     plt.plot(range(len(std_dev_list[i])),std_dev_list[i])
 plt.ylabel('fitness-stdev')
 plt.xlabel('generation')
  
 plt.show()
 '''
-for i in range(min(5, len(fitness_list))):
+for i in range(min(ltp, len(fitness_list))):
     plt.plot(range(len(std_dev_list[i])),movingaverage(std_dev_list[i], 20))
 
 plt.show()
 '''
-for i in range(min(5, len(fitness_list))):
+for i in range(min(ltp, len(fitness_list))):
     plt.plot(range(len(d0_list[i])),d0_list[i])
 plt.ylabel('d0')
 plt.xlabel('generation')
  
 plt.show()
 
-for i in range(min(5, len(fitness_list))):
+for i in range(min(ltp, len(fitness_list))):
     plt.plot(range(len(d1_list[i])),d1_list[i])
 plt.ylabel('d1')
 plt.xlabel('generation')
  
 plt.show()
 
-for i in range(min(5, len(fitness_list))):
-    plt.plot(range(len(dun_list[i])),dun_list[i])
-plt.ylabel('dun')
+for i in range(min(ltp, len(fitness_list))):
+    plt.plot(range(len(d2_list[i])),d2_list[i])
+plt.ylabel('d2')
 plt.xlabel('generation')
  
 plt.show()
 
-for i in range(min(5, len(fitness_list))):
+for i in range(min(ltp, len(fitness_list))):
     plt.plot(range(len(att_list[i])),att_list[i])
 plt.ylabel('ATT')
 plt.xlabel('generation')
@@ -112,6 +114,6 @@ plt.xlabel('generation')
 plt.show()
 
 
-for i in range(min(5, len(fitness_list))):
+for i in range(min(ltp, len(fitness_list))):
     print(len(fitness_list[i]))
     print(len(std_dev_list[i]))

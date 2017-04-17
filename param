@@ -1,9 +1,9 @@
 routeSetSize 15
 pSwap 0.066666667
-popSize 25
+popSize 100
 elite 2
 pSm 0.3
-prcm 0.6
+prcm 0.4
 pDelete 0.4
 tFit 10
 maxGen 300

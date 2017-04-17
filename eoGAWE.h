@@ -181,6 +181,8 @@ public:
             {
                 prevBest = best.fitness();
                 stableCounter--;
+		if(stableCounter < 0)
+			stableCounter = 0;
             }
             gen++;
             //printf("%d\n", _pop.size());

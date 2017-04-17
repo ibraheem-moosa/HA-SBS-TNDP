@@ -85,16 +85,24 @@ public:
                 // now look for most similar route in 2
                 int maxRouteSimilarity = 0;
                 int mostSimilarRoute = 0;
+		vector<int> route_similarities;
+		vector<int> most_similar_routes;
                 for(int j = 0; j < _genotype2.size(); j++)
                 {
                     if(in_2_from_1[j]) continue; //this one came from 1, no need to swap back
                     int s = routeSimilarity(_genotype1[i], _genotype2[j]);
-                    if(s >= maxRouteSimilarity)
+		    route_similarities.push_back(s);
+                    if(s > maxRouteSimilarity)
                     {
                         maxRouteSimilarity = s;
-                        mostSimilarRoute = j;
                     }
                 }
+		for(int j = 0; j < route_similarities.size(); j++)
+		{
+		    if(route_similarities[j] == maxRouteSimilarity)
+			most_similar_routes.push_back(j);
+		}
+		mostSimilarRoute = most_similar_routes[random() % most_similar_routes.size()];
                 Route<double> temp = _genotype1[i];
                 _genotype1[i] = _genotype2[mostSimilarRoute];
                 _genotype2[mostSimilarRoute] = temp;
