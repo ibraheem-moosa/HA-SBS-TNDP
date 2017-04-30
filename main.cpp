@@ -168,7 +168,7 @@ void main_function(int argc, char **argv)
 
 int main(int argc, char** argv)
 {
-    gatherAllInfo();
+    gatherAllInfo(argv[1]);
 
 	minRouteSize = parameters["minRouteLength"];
 	maxRouteSize = parameters["maxRouteLength"];
