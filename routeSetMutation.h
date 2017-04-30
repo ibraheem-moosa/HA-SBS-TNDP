@@ -246,6 +246,22 @@ public:
 	{
 		new_r2_list.push_back(*it);
 	}
+	vector<bool> occurence_check(VERTICES_NO, false);
+	for(auto vertex : new_r1_list)
+	{
+		if(occurence_check[vertex])
+			return false;
+		occurence_check[vertex] = true;
+	}
+	for(int i = 0; i < VERTICES_NO; i++)
+		occurence_check[i] = false;
+	for(auto vertex : new_r2_list)
+	{
+		if(occurence_check[vertex])
+			return false;
+		occurence_check[vertex] = true;
+	}
+
 	if(new_r1_list.size() < minRouteSize || new_r1_list.size() > maxRouteSize)
 		return false;
 	if(new_r2_list.size() < minRouteSize || new_r2_list.size() > maxRouteSize)
@@ -253,6 +269,7 @@ public:
 
 
 	route1.setR(new_r1_list);
+
 	vector<int> newNodeList(VERTICES_NO, 0);
         for (list<int>::iterator lit = new_r1_list.begin(); lit != new_r1_list.end(); lit++)
         {
