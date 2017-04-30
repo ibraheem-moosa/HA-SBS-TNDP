@@ -117,10 +117,14 @@ public:
                 {
                     Q[2 * i].invalidate();
                 }
+				else
+					puts("Mutation failed");
                 if (mutate(Q[2 * i + 1]))
                 {
                     Q[2 * i + 1].invalidate();
                 }
+				else
+					puts("Mutation failed");
 
             }
             // std::cout <<"Q after breed"<<Q;

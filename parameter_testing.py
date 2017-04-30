@@ -22,6 +22,7 @@ params['e'] = 0.7
 
 import subprocess
 import time
+import sys
 default_params = {'pSm' : 0.3, 'pDelete' : 0.4, 'tFit' : 3, 'popSize' : 30, 'elite' : 2, 'pSwap' : 1 / 15}
 processes = []
 output_files = []
@@ -39,12 +40,15 @@ def run_progs(var, values):
         params['tFit'] = round(default_params['tFit'] * params['popSize'] / default_params['popSize'])
         param_fname = 'params_' + var + '_' + str(value)
         write_param_file(param_fname, params)
-        out_fname = './outputs/output_' + var + '_' + str(value)
+        if(len(sys.argv) > 1):
+            out_fname = './outputs/' + sys.argv[1] + '_output_' + var + '_' + str(value)
+        else: 
+            out_fname = './outputs/output_' + var + '_' + str(value)
         out_file = open(out_fname, 'w+')
         output_files.append(out_file)
         p = subprocess.Popen(['./m1', param_fname], stdout=out_file, stderr=subprocess.DEVNULL)
         processes.append(p)
-        if len(processes) == 10:
+        if len(processes) == 3:
             prog_teriminated = None
             while prog_teriminated == None:
                 for i, p in enumerate(processes):
@@ -57,11 +61,11 @@ def run_progs(var, values):
             processes.remove(processes[prog_teriminated])
 
 #run_progs('popSize', list(range(15, 65, 5)))
-run_progs('pSm', [0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0])
-run_progs('pDelete', [0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0])
+#run_progs('pSm', [0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0])
+#run_progs('pDelete', [0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0])
 run_progs('tFit', list(range(2, 20)))
-run_progs('elite', list(range(1, 20, 2)))
-run_progs('pSwap', [x / 15 for x in range(0, 10)])
+#run_progs('elite', list(range(1, 20, 2)))
+#run_progs('pSwap', [x / 15 for x in range(0, 10)])
 
 for p in processes:
     p.wait()

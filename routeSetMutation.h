@@ -204,90 +204,107 @@ public:
      */
     bool operator()(GenotypeT & _genotype)
     {
-        // START code for mutation of the _genotype object
-	// Randomly select two routes
-	int r1 = random() % _genotype.size();
-	int r2 = random() % _genotype.size();
-        Route<double>& route1 = _genotype[r1];
-        Route<double>& route2 = _genotype[r2];
-	vector<int> common_nodes;
-	for(int i = 0; i < route1.nodeList.size(); i++)
-	{
-		if(route1.nodeList[i] != 0 && route2.nodeList[i] != 0)
+			// START code for mutation of the _genotype object
+		// Randomly select two routes
+		int try_count = 0;
+SELECT_ROUTES:	
+		int r1 = random() % _genotype.size();
+		int r2 = random() % _genotype.size();
+		if(try_count == 10)
+			return false;
+		try_count++;
+		Route<double>& route1 = _genotype[r1];
+		Route<double>& route2 = _genotype[r2];
+		vector<int> common_nodes;
+		for(int i = 0; i < route1.nodeList.size(); i++)
 		{
-			common_nodes.push_back(i);
+			if(route1.nodeList[i] != 0 && route2.nodeList[i] != 0)
+			{
+				common_nodes.push_back(i);
+			}
 		}
-	}
-	if(common_nodes.size() == 0)
+		if(common_nodes.size() == 0)
+			goto SELECT_ROUTES;
+		
+		for(int i = 0; i < common_nodes.size(); i++)
+		{
+			//int random_common_node = common_nodes[random() % common_nodes.size()];
+			std::list<int>& r1_list = route1.mutableR();
+			std::list<int>& r2_list = route2.mutableR();
+			std::list<int>::iterator r1_iter = std::find(r1_list.begin(), r1_list.end(), common_nodes[i]);
+			std::list<int>::iterator r2_iter = std::find(r2_list.begin(), r2_list.end(), common_nodes[i]);
+			std::list<int> new_r1_list;
+			for(auto it = r1_list.begin(); it != r1_iter; it++)
+			{
+				new_r1_list.push_back(*it);
+			}
+			for(auto it = r2_iter; it != r2_list.end(); it++)
+			{
+				new_r1_list.push_back(*it);
+			}
+
+
+			std::list<int> new_r2_list;
+			for(auto it = r2_list.begin(); it != r2_iter; it++)
+			{
+				new_r2_list.push_back(*it);
+			}
+			for(auto it = r1_iter; it != r1_list.end(); it++)
+			{
+				new_r2_list.push_back(*it);
+			}
+			bool invalid = false;
+			vector<bool> occurence_check(VERTICES_NO, false);
+			for(auto vertex : new_r1_list)
+			{
+				if(occurence_check[vertex]){
+					invalid = true;
+					break;
+				}
+				occurence_check[vertex] = true;
+			}
+			if(invalid)
+				continue;
+			for(int i = 0; i < VERTICES_NO; i++)
+				occurence_check[i] = false;
+			for(auto vertex : new_r2_list)
+			{
+				if(occurence_check[vertex]){
+					invalid = true;
+					break;
+				}
+				occurence_check[vertex] = true;
+			}
+			if(invalid)
+				continue;
+			if(new_r1_list.size() < minRouteSize || new_r1_list.size() > maxRouteSize)
+				continue;
+			if(new_r2_list.size() < minRouteSize || new_r2_list.size() > maxRouteSize)
+				continue;
+
+
+			route1.setR(new_r1_list);
+
+			vector<int> newNodeList(VERTICES_NO, 0);
+				for (list<int>::iterator lit = new_r1_list.begin(); lit != new_r1_list.end(); lit++)
+				{
+					newNodeList[*lit] = 1;
+				}
+				route1.setNodeList(newNodeList);
+			route1.invalidate();
+
+			route2.setR(new_r2_list);
+			newNodeList = vector<int>(VERTICES_NO, 0);
+				for (list<int>::iterator lit = new_r2_list.begin(); lit != new_r2_list.end(); lit++)
+				{
+					newNodeList[*lit] = 1;
+				}
+				route2.setNodeList(newNodeList);
+				route2.invalidate();
+
+			return true;
+		}
 		return false;
-
-	int random_common_node = common_nodes[random() % common_nodes.size()];
-	std::list<int>& r1_list = route1.mutableR();
-	std::list<int>& r2_list = route2.mutableR();
-	std::list<int>::iterator r1_iter = std::find(r1_list.begin(), r1_list.end(), random_common_node);
-	std::list<int>::iterator r2_iter = std::find(r2_list.begin(), r2_list.end(), random_common_node);
-	std::list<int> new_r1_list;
-	for(auto it = r1_list.begin(); it != r1_iter; it++)
-	{
-		new_r1_list.push_back(*it);
-	}
-	for(auto it = r2_iter; it != r2_list.end(); it++)
-	{
-		new_r1_list.push_back(*it);
-	}
-
-
-	std::list<int> new_r2_list;
-	for(auto it = r2_list.begin(); it != r2_iter; it++)
-	{
-		new_r2_list.push_back(*it);
-	}
-	for(auto it = r1_iter; it != r1_list.end(); it++)
-	{
-		new_r2_list.push_back(*it);
-	}
-	vector<bool> occurence_check(VERTICES_NO, false);
-	for(auto vertex : new_r1_list)
-	{
-		if(occurence_check[vertex])
-			return false;
-		occurence_check[vertex] = true;
-	}
-	for(int i = 0; i < VERTICES_NO; i++)
-		occurence_check[i] = false;
-	for(auto vertex : new_r2_list)
-	{
-		if(occurence_check[vertex])
-			return false;
-		occurence_check[vertex] = true;
-	}
-
-	if(new_r1_list.size() < minRouteSize || new_r1_list.size() > maxRouteSize)
-		return false;
-	if(new_r2_list.size() < minRouteSize || new_r2_list.size() > maxRouteSize)
-		return false;
-
-
-	route1.setR(new_r1_list);
-
-	vector<int> newNodeList(VERTICES_NO, 0);
-        for (list<int>::iterator lit = new_r1_list.begin(); lit != new_r1_list.end(); lit++)
-        {
-            newNodeList[*lit] = 1;
-        }
-        route1.setNodeList(newNodeList);
-	route1.invalidate();
-
-	route2.setR(new_r2_list);
-	newNodeList = vector<int>(VERTICES_NO, 0);
-        for (list<int>::iterator lit = new_r2_list.begin(); lit != new_r2_list.end(); lit++)
-        {
-            newNodeList[*lit] = 1;
-        }
-        route2.setNodeList(newNodeList);
-        route2.invalidate();
-
-        return true;
         // END code for mutation of the _genotype object
     }
 
