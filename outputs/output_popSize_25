@@ -1,0 +1,21 @@
+e:0.7
+elite:2
+tFit:10
+popSize:25
+pSm:0.3
+routeSetSize:15
+run:5
+minFitnessRatio:1e-05
+prcm:0
+stableCount:20
+pDelete:0.4
+maxRouteLength:30
+maxGen:200
+minRouteLength:10
+pSwap:0.0666667
+minGen:1
+maxIter:1
+beta:0.8
+beta:0.8
+ OpATT19.2695
+minRputeSize: 10 maxRouteSize: 30

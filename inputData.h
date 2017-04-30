@@ -46,15 +46,15 @@ struct edge
     double penalizibility;
 };
 
-void readParam()
+void readParam(char* fname)
 {
-    ifstream fin("param");
+    ifstream fin(fname);
     string name;
     float value;
     while (!fin.eof())
     {
         fin >> name >> value;
-        cout << name << ":" << value << ",";
+        cout << name << ":" << value << endl;
         parameters[name] = value;
         //        cout<<parameters[name]<<endl;
     }
@@ -204,9 +204,9 @@ void findDS()
     }
 }
 
-void gatherAllInfo()
+void gatherAllInfo(char* param_fname)
 {
-    readParam();
+    readParam(param_fname);
     readData();
     floydWarshallWithPath();
     findDS();

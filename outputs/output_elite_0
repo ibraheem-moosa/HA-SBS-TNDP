@@ -1,0 +1,81 @@
+minGen:1
+elite:0
+stableCount:20
+beta:0.8
+pDelete:0.4
+run:5
+maxIter:1
+popSize:25
+maxGen:200
+routeSetSize:15
+e:0.7
+prcm:0
+minRouteLength:10
+tFit:10
+minFitnessRatio:1e-05
+pSwap:0.0666667
+pSm:0.3
+maxRouteLength:30
+maxRouteLength:30
+ OpATT24.7452
+minRputeSize: 10 maxRouteSize: 30
+Initial : -1.34826e+08
+0.171018
+0.413451
+0.174843
+0.240688
+31.8393
+
+-----------------------------------------
+Iteration:0 started
+
+Gen:0
+Exception: std::bad_alloc
+Initial : -1.34826e+08
+0.171018
+0.413451
+0.174843
+0.240688
+31.8393
+
+-----------------------------------------
+Iteration:0 started
+
+Gen:0
+Exception: std::bad_alloc
+Initial : -1.34826e+08
+0.171018
+0.413451
+0.174843
+0.240688
+31.8393
+
+-----------------------------------------
+Iteration:0 started
+
+Gen:0
+Exception: std::bad_alloc
+Initial : -1.34826e+08
+0.171018
+0.413451
+0.174843
+0.240688
+31.8393
+
+-----------------------------------------
+Iteration:0 started
+
+Gen:0
+Exception: std::bad_alloc
+Initial : -1.34826e+08
+0.171018
+0.413451
+0.174843
+0.240688
+31.8393
+
+-----------------------------------------
+Iteration:0 started
+
+Gen:0
+Exception: std::bad_alloc

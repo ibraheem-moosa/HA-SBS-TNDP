@@ -172,7 +172,7 @@ public:
                 stableCounter++;
                 if (stableCounter == this->stableCount)
                 {
-                    break;
+                    //break;
                 }
                 prevBest = best.fitness();
                 printf("ratio: %lf stable count: %d\n", fitnessImprovementRatio, stableCounter);
