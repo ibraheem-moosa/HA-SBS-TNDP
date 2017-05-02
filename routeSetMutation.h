@@ -18,6 +18,9 @@
 #include "inputData.h"
 //#include "./heuristics/genRoute.h"
 
+#define MUTATION_DEBUG
+//#undef MUTATION_DEBUG
+
 template<class GenotypeT>
 int rouletteWheelForRoute(GenotypeT & _genotype, eoEvalFuncPtr< Route<double> >& _eval)
 {
@@ -133,7 +136,12 @@ APPEND:     vector<int> AdjListForSelected = AdjList[selectedNode];
                 }
             }
             if (AdjListForSelected.size() == 0)
+			{
+#ifdef MUTATION_DEBUG
+				puts("Small Mutation Failed");
+#endif
                 return false;
+			}
             int neighbor;
             if (selectedEnd == FRONT)
             {
@@ -160,6 +168,9 @@ APPEND:     vector<int> AdjListForSelected = AdjList[selectedNode];
  
        
                mutRoute.invalidate();
+#ifdef MUTATION_DEBUG
+		puts("Small Mutation Successful");
+#endif
         return true;
         // END code for mutation of the _genotype object
     }
@@ -211,8 +222,15 @@ SELECT_ROUTES:
 		int r1 = random() % _genotype.size();
 		int r2 = random() % _genotype.size();
 		if(try_count == 10)
+		{
+#ifdef MUTATION_DEBUG
+			puts("Route Cross Mutation Failed");
+#endif
 			return false;
+		}
 		try_count++;
+		if(r1 == r2)
+			got SELECT_ROUTES;
 		Route<double>& route1 = _genotype[r1];
 		Route<double>& route2 = _genotype[r2];
 		vector<int> common_nodes;
@@ -301,9 +319,15 @@ SELECT_ROUTES:
 				}
 				route2.setNodeList(newNodeList);
 				route2.invalidate();
-
+#ifdef MUTATION_DEBUG
+			puts("Route Cross Mutation Successful");
+#endif
 			return true;
 		}
+		goto SELECT_ROUTES;
+#ifdef MUTATION_DEBUG
+		puts("Route Cross Mutation Failed");
+#endif
 		return false;
         // END code for mutation of the _genotype object
     }
